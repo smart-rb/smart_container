@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 
 require 'bundler/setup'
-require 'siege'
+require 'smart_core/container'
 
 require 'irb'
 IRB.start(__FILE__)
