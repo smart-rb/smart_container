@@ -3,7 +3,7 @@
 RSpec.describe 'Frozen state' do
   describe 'freeze! macros' do
     specify 'freezes all instances' do
-      container = Class.new(SmartCore::Container) { freeze_state! }
+      container = Class.new(SmartCore::Container) { freeze_state! }.new
       expect(container.frozen?).to eq(true)
     end
 
@@ -20,8 +20,6 @@ RSpec.describe 'Frozen state' do
   end
 
   context 'frozen state' do
-    before { container.freeze! }
-
     let(:container) do
       Class.new(SmartCore::Container) do
         namespace :database do
@@ -39,60 +37,64 @@ RSpec.describe 'Frozen state' do
       expect(container.frozen?).to eq(true)
     end
 
-    specify 'registration of the new dependency should fail' do
-      expect { container.register(:logger) { :logger } }.to raise_error(
-        SmartCore::Container::FrozenRegistryError
-      )
+    context 'instance behaviour' do
+      before { container.freeze! }
 
-      expect { container.fetch(:logger) }.to raise_error(
-        SmartCore::Container::FetchError
-      )
-    end
+      specify 'registration of the new dependency should fail' do
+        expect { container.register(:logger) { :logger } }.to raise_error(
+          SmartCore::Container::FrozenRegistryError
+        )
 
-    specify 're-registration of the existing dependency should fail' do
-      expect { container.register(:randomizer) { :new_randomizer } }.to raise_error(
-        SmartCore::Container::FrozenRegistryError
-      )
+        expect { container.fetch(:logger) }.to raise_error(
+          SmartCore::Container::FetchError
+        )
+      end
 
-      expect(container.fetch(:randomizer)).to eq(:randomizer)
-    end
+      specify 're-registration of the existing dependency should fail' do
+        expect { container.register(:randomizer) { :new_randomizer } }.to raise_error(
+          SmartCore::Container::FrozenRegistryError
+        )
 
-    specify 'creation of the new namespace should fail' do
-      expect { container.namespace(:services) {} }.to raise_error(
-        SmartCore::Container::FrozenRegistryError
-      )
+        expect(container.fetch(:randomizer)).to eq(:randomizer)
+      end
 
-      expect { container.fetch(:services) }.to raise_error(
-        SmartCore::Container::FetchError
-      )
-    end
+      specify 'creation of the new namespace should fail' do
+        expect { container.namespace(:services) {} }.to raise_error(
+          SmartCore::Container::FrozenRegistryError
+        )
 
-    specify 'reopening of the existing namespace should fail' do
-      expect { container.namespace(:database) {} }.to raise_error(
-        SmartCore::Container::FrozenRegistryError
-      )
-    end
+        expect { container.fetch(:services) }.to raise_error(
+          SmartCore::Container::FetchError
+        )
+      end
 
-    specify 'registering of new dependencies on the existing namespace should fail' do
-      expect do
-        container.namespace(:database) do
-          register(:service) { :service }
-        end
-      end.to raise_error(SmartCore::Container::FrozenRegistryError)
+      specify 'reopening of the existing namespace should fail' do
+        expect { container.namespace(:database) {} }.to raise_error(
+          SmartCore::Container::FrozenRegistryError
+        )
+      end
 
-      expect { container.fetch(:database).fetch(:service) }.to raise_error(
-        SmartCore::Container::FetchError
-      )
-    end
+      specify 'registering of new dependencies on the existing namespace should fail' do
+        expect do
+          container.namespace(:database) do
+            register(:service) { :service }
+          end
+        end.to raise_error(SmartCore::Container::FrozenRegistryError)
 
-    specify 'all nested containers should be frozen too' do
-      expect do
-        container.fetch(:database).register(:service) { :service }
-      end.to raise_error(SmartCore::Container::FrozenRegistryError)
+        expect { container.fetch(:database).fetch(:service) }.to raise_error(
+          SmartCore::Container::FetchError
+        )
+      end
 
-      expect { container.fetch(:database).fetch(:service) }.to raise_error(
-        SmartCore::Container::FetchError
-      )
+      specify 'all nested containers should be frozen too' do
+        expect do
+          container.fetch(:database).register(:service) { :service }
+        end.to raise_error(SmartCore::Container::FrozenRegistryError)
+
+        expect { container.fetch(:database).fetch(:service) }.to raise_error(
+          SmartCore::Container::FetchError
+        )
+      end
     end
   end
 end

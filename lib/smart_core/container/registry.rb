@@ -56,7 +56,7 @@ class SmartCore::Container::Registry
   # @api private
   # @since 0.1.0
   def freeze!
-    thread_safe { freeze_state }
+    thread_safe { freeze_state! }
   end
 
   # @return [Boolean]
@@ -123,7 +123,7 @@ class SmartCore::Container::Registry
   #
   # @api private
   # @since 0.1.0
-  def freeze_state
+  def freeze_state!
     registry.freeze.tap do
       enumerate do |(entity_name, entity)|
         entity.freeze! if entity.is_a?(SmartCore::Container::Entities::Namespace)

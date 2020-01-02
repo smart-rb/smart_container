@@ -30,6 +30,7 @@ RSpec.describe 'Dot-notation' do
     expect do
       container.resolve('storages.cache')
     end.to raise_error(SmartCore::Container::ResolvingError)
+
     expect do
       container.resolve('storages.persistent')
     end.to raise_error(SmartCore::Container::ResolvingError)
@@ -43,6 +44,11 @@ RSpec.describe 'Dot-notation' do
 
     expect do
       container['storages.virtual']
+    end.to raise_error(SmartCore::Container::ResolvingError)
+
+    # trying to resolve a dependency from a dependency :D
+    expect do
+      container['storages.cache.general.test']
     end.to raise_error(SmartCore::Container::ResolvingError)
   end
 end

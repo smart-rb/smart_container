@@ -39,5 +39,27 @@ RSpec.describe 'Mixin' do
     end.new
 
     expect(application.container.frozen?).to eq(true)
+
+    application = Class.new do
+      include SmartCore::Container::Mixin
+      dependencies { freeze_state! }
+    end
+
+    expect(application.container.frozen?).to eq(true)
+  end
+
+  specify 'inheritance works as expected :)' do
+    application = Class.new do
+      include SmartCore::Container::Mixin
+      dependencies { register(:lock) { 'lock' } }
+    end
+
+    sub_application = Class.new(application) do
+      dependencies { register(:unlock) { 'unlock' } }
+    end
+
+    app = sub_application.new
+    expect(app.container['lock']).to eq('lock') # NOTE: inherited dependency
+    expect(app.container['unlock']).to eq('unlock') # NOTE: own dependency
   end
 end

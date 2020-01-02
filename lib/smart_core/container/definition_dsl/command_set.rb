@@ -53,7 +53,9 @@ class SmartCore::Container::DefinitionDSL::CommandSet
       if block_given?
         command_set.dup.each { |command| (commands << command) if yield(command) }
       else
-        commands.concat(command_set.dup.commands)
+        # :nocov:
+        commands.concat(command_set.dup.commands) # NOTE: unreachable code at this moment
+        # :nocov:
       end
     end
   end
