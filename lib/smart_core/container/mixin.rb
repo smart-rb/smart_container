@@ -37,8 +37,7 @@ module SmartCore::Container::Mixin
       child_klass.instance_variable_set(:@__smart_core_container_access_lock__, SmartCore::Container::ArbitaryLock.new)
       child_klass.instance_variable_set(:@__smart_core_container_klass__, inherited_container_klass)
       child_klass.instance_variable_set(:@__smart_core_container__, nil)
-      # rubocop:disable Layout/LineLength
-
+      # rubocop:enable Layout/LineLength
       super
     end
   end

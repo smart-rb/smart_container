@@ -39,18 +39,20 @@ module SmartCore::Container::DependencyResolver
       Route.build(dependency_path).each do |cursor|
         entity = entity.registry.resolve(cursor.current_path)
         if cursor.last? && entity.is_a?(SmartCore::Container::Entities::Namespace)
-          # rubocop:enable Layout/LineLength
-          raise(SmartCore::Container::ResolvingError.new(<<~MESSAGE, path_part: cursor.current_path))
-            Trying to resolve a namespace as a dependency
-          MESSAGE
-          # rubocop:disable Layout/LineLength
+          raise(
+            SmartCore::Container::ResolvingError.new(
+              'Trying to resolve a namespace as a dependency',
+              path_part: cursor.current_path
+            )
+          )
         end
         if !cursor.last? && entity.is_a?(SmartCore::Container::Entities::Dependency)
-          # rubocop:enable Layout/LineLength
-          raise(SmartCore::Container::ResolvingError.new(<<~MESSAGE, path_part: cursor.current_path))
-            Trying to resolve nonexistent dependency
-          MESSAGE
-          # rubocop:disable Layout/LineLength
+          raise(
+            SmartCore::Container::ResolvingError.new(
+              'Trying to resolve nonexistent dependency',
+              path_part: cursor.current_path
+            )
+          )
         end
         entity = entity.reveal
       end
