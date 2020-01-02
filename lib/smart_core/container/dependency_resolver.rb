@@ -35,30 +35,55 @@ module SmartCore::Container::DependencyResolver
     # @version 0.1.0
     def resolve(container, dependency_path)
       entity = container
-
       Route.build(dependency_path).each do |cursor|
         entity = entity.registry.resolve(cursor.current_path)
-        if cursor.last? && entity.is_a?(SmartCore::Container::Entities::Namespace)
-          raise(
-            SmartCore::Container::ResolvingError.new(
-              'Trying to resolve a namespace as a dependency',
-              path_part: cursor.current_path
-            )
-          )
-        end
-        if !cursor.last? && entity.is_a?(SmartCore::Container::Entities::Dependency)
-          raise(
-            SmartCore::Container::ResolvingError.new(
-              'Trying to resolve nonexistent dependency',
-              path_part: cursor.current_path
-            )
-          )
-        end
+        prevent_cursor_overflow!(cursor, entity)
         entity = entity.reveal
       end
-
       entity
     rescue SmartCore::Container::ResolvingError => error
+      process_resolving_error(dependency_path, error)
+    end
+
+    private
+
+    # @param cursor [SmartCore::Container::DependencyResolver::Route::Cursor]
+    # @param entity [SmartCore::Container::Entities::Base]
+    # @return [void]
+    #
+    # @raise [SmartCore::Container::ResolvingError]
+    #
+    # @api private
+    # @since 0.1.0
+    def prevent_cursor_overflow!(cursor, entity)
+      if cursor.last? && entity.is_a?(SmartCore::Container::Entities::Namespace)
+        raise(
+          SmartCore::Container::ResolvingError.new(
+            'Trying to resolve a namespace as a dependency',
+            path_part: cursor.current_path
+          )
+        )
+      end
+
+      if !cursor.last? && entity.is_a?(SmartCore::Container::Entities::Dependency)
+        raise(
+          SmartCore::Container::ResolvingError.new(
+            'Trying to resolve nonexistent dependency',
+            path_part: cursor.current_path
+          )
+        )
+      end
+    end
+
+    # @param dependency_path [String, Symbol]
+    # @param error [SmartCore::Container::ResolvingError]
+    # @return [void]
+    #
+    # @raise [SmartCore::Container::ResolvingError]
+    #
+    # @api private
+    # @since 0.1.0
+    def process_resolving_error(dependency_path, error)
       full_dependency_path = Route.build_path(dependency_path, error.path_part)
       raise(SmartCore::Container::ResolvingError.new(<<~MESSAGE, path_part: full_dependency_path))
         #{error.message} (incorrect path: "#{full_dependency_path}")
