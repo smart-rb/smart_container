@@ -41,12 +41,21 @@ class SmartCore::Container::DefinitionDSL::CommandSet
   end
 
   # @param command_set [SmartCore::Container::DefinitionDSL::CommandSet]
+  # @param concat_condition [Block]
+  # @yield [command]
+  # @yieldparam command [SmartCore::Container::DefinitionDSL::Commands::Base]
   # @return [void]
   #
   # @api private
   # @since 0.1.0
-  def concat(command_set)
-    thread_safe { commands.concat(command_set.dup.commands) }
+  def concat(command_set, &concat_condition)
+    thread_safe do
+      if block_given?
+        command_set.dup.each { |command| (commands << command) if yield(command) }
+      else
+        commands.concat(command_set.dup.commands)
+      end
+    end
   end
 
   # @return [SmartCore::Container::DefinitionDSL::CommandSet]

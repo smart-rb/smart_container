@@ -6,6 +6,7 @@ class SmartCore::Container
   module DefinitionDSL
     require_relative 'definition_dsl/commands'
     require_relative 'definition_dsl/command_set'
+    require_relative 'definition_dsl/inheritance'
 
     class << self
       # @param base_klass [Class<SmartCore::Container>]
@@ -36,15 +37,7 @@ class SmartCore::Container
         child_klass.instance_variable_set(:@__container_definition_commands__, CommandSet.new)
         child_klass.instance_variable_set(:@__container_instantiation_commands__, CommandSet.new)
         child_klass.instance_variable_set(:@__container_definition_lock__, ArbitaryLock.new)
-
-        child_klass.__container_definition_commands__.concat(
-          __container_definition_commands__
-        )
-
-        child_klass.__container_instantiation_commands__.concat(
-          __container_instantiation_commands__
-        )
-
+        SmartCore::Container::DefinitionDSL::Inheritance.inherit(base: self, child: child_klass)
         child_klass.singleton_class.prepend(ClassInheritance)
         super
       end

@@ -4,6 +4,9 @@ module SmartCore::Container::DefinitionDSL::Commands::Definition
   # @api private
   # @since 0.1.0
   class Namespace < SmartCore::Container::DefinitionDSL::Commands::Base
+    # @since 0.1.0
+    self.inheritable = true
+
     # @return [String]
     #
     # @api private

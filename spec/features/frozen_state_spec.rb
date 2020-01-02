@@ -1,25 +1,43 @@
 # frozen_string_literal: true
 
 RSpec.describe 'Frozen state' do
-  let(:container) do
-    Class.new(SmartCore::Container) do
-      namespace :database do
-        register(:logger) { :logger }
-        register(:adapter) { :postgresql }
-      end
+  describe 'freeze! macros' do
+    specify 'freezes all instances' do
+      container = Class.new(SmartCore::Container) { freeze_state! }
+      expect(container.frozen?).to eq(true)
+    end
 
-      register(:randomizer) { :randomizer }
-    end.new
-  end
+    specify 'is not inharitable' do
+      container_klass = Class.new(SmartCore::Container) { freeze_state! }
+      container_sub_klass = Class.new(container_klass)
 
-  specify 'frozen? predicate' do
-    expect(container.frozen?).to eq(false)
-    container.freeze!
-    expect(container.frozen?).to eq(true)
+      container = container_klass.new
+      expect(container.frozen?).to eq(true)
+
+      sub_container = container_sub_klass.new
+      expect(sub_container.frozen?).to eq(false)
+    end
   end
 
   context 'frozen state' do
     before { container.freeze! }
+
+    let(:container) do
+      Class.new(SmartCore::Container) do
+        namespace :database do
+          register(:logger) { :logger }
+          register(:adapter) { :postgresql }
+        end
+
+        register(:randomizer) { :randomizer }
+      end.new
+    end
+
+    specify 'frozen? predicate' do
+      expect(container.frozen?).to eq(false)
+      container.freeze!
+      expect(container.frozen?).to eq(true)
+    end
 
     specify 'registration of the new dependency should fail' do
       expect { container.register(:logger) { :logger } }.to raise_error(

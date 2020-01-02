@@ -4,6 +4,9 @@ module SmartCore::Container::DefinitionDSL::Commands::Instantiation
   # @api private
   # @since 0.1.0
   class Compose < SmartCore::Container::DefinitionDSL::Commands::Base
+    # @since 0.1.0
+    self.inheritable = true
+
     # @param container_klass [Class<SmartCore::Container>]
     # @return [void]
     #
