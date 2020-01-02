@@ -2,6 +2,8 @@
 
 Thread-safe semanticaly-defined IoC/DI Container.
 
+---
+
 ## Installation
 
 ```ruby
