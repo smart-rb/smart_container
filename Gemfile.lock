@@ -2,7 +2,7 @@ PATH
   remote: .
   specs:
     smart_container (0.1.0)
-      smart_engine (~> 0.1)
+      smart_engine (~> 0.2)
 
 GEM
   remote: https://rubygems.org/
@@ -64,7 +64,7 @@ GEM
       json (>= 1.8, < 3)
       simplecov-html (~> 0.10.0)
     simplecov-html (0.10.2)
-    smart_engine (0.1.0)
+    smart_engine (0.2.0)
     unicode-display_width (1.6.0)
 
 PLATFORMS
