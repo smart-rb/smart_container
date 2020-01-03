@@ -14,8 +14,8 @@ module SmartCore::Container::RegistryBuilder
     # @since 0.1.0
     def build(container, ignored_definition_commands: [], ignored_instantiation_commands: [])
       SmartCore::Container::Registry.new.tap do |registry|
-        build_definitions(container.class, registry, ignored_commands: ignored_definition_commands)
-        build_state(container.class, registry, ignored_commands: ignored_instantiation_commands)
+        define(container.class, registry, ignored_commands: ignored_definition_commands)
+        instantiate(container.class, registry, ignored_commands: ignored_instantiation_commands)
       end
     end
 
@@ -26,7 +26,7 @@ module SmartCore::Container::RegistryBuilder
     #
     # @api private
     # @since 0.1.0
-    def build_definitions(container_klass, registry, ignored_commands: [])
+    def define(container_klass, registry, ignored_commands: [])
       container_klass.__container_definition_commands__.each do |command|
         next if ignored_commands.include?(command.class)
         command.call(registry)
@@ -40,7 +40,7 @@ module SmartCore::Container::RegistryBuilder
     #
     # @api private
     # @since 0.1.0
-    def build_state(container_klass, registry, ignored_commands: [])
+    def instantiate(container_klass, registry, ignored_commands: [])
       container_klass.__container_instantiation_commands__.each do |command|
         next if ignored_commands.include?(command.class)
         command.call(registry)

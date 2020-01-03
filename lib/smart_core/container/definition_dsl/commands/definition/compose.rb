@@ -27,7 +27,7 @@ module SmartCore::Container::DefinitionDSL::Commands::Definition
     # @api private
     # @since 0.1.0
     def call(registry)
-      SmartCore::Container::RegistryBuilder.build_definitions(container_klass, registry)
+      SmartCore::Container::RegistryBuilder.define(container_klass, registry)
     end
 
     # @return [SmartCore::Container::DefinitionDSL::Commands::Definition::Compose]

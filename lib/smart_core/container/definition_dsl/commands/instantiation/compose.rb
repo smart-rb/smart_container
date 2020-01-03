@@ -27,7 +27,7 @@ module SmartCore::Container::DefinitionDSL::Commands::Instantiation
     # @api private
     # @since 0.1.0
     def call(registry)
-      SmartCore::Container::RegistryBuilder.build_state(
+      SmartCore::Container::RegistryBuilder.instantiate(
         container_klass, registry, ignored_commands: [
           SmartCore::Container::DefinitionDSL::Commands::Instantiation::FreezeState
         ]
