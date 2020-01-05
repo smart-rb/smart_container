@@ -38,7 +38,7 @@ class Container < SmartCore::Container
   # root dependencies
   register(:logger, memoize: true) { Logger.new(STDOUT) }
 
-  # do not memoize registered object
+  # dependencies are not memoized by default (memoize: false)
   register(:random) { rand(1000) }
 end
 
