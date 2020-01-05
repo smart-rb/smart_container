@@ -13,8 +13,8 @@ RSpec.describe 'Hash tree (#to_h / #to_hash / #hash_tree)' do
       end
 
       namespace(:queues) do
-        register(:async, memoize: false) { :sidekiq }
-        register(:sync, memoize: false) { :in_memory }
+        register(:async, memoize: true) { :sidekiq }
+        register(:sync, memoize: true) { :in_memory }
       end
     end.new
   end
@@ -43,14 +43,14 @@ RSpec.describe 'Hash tree (#to_h / #to_hash / #hash_tree)' do
         expect(container.public_send(method_name)).to match(
           'storages' => {
             'adapters' => {
-              'database' => an_instance_of(SmartCore::Container::Entities::MemoizedDependency),
-              'cache' => an_instance_of(SmartCore::Container::Entities::MemoizedDependency)
+              'database' => an_instance_of(SmartCore::Container::Entities::Dependency),
+              'cache' => an_instance_of(SmartCore::Container::Entities::Dependency)
             },
-            'logger' => an_instance_of(SmartCore::Container::Entities::MemoizedDependency)
+            'logger' => an_instance_of(SmartCore::Container::Entities::Dependency)
           },
           'queues' => {
-            'async' => an_instance_of(SmartCore::Container::Entities::Dependency),
-            'sync' => an_instance_of(SmartCore::Container::Entities::Dependency)
+            'async' => an_instance_of(SmartCore::Container::Entities::MemoizedDependency),
+            'sync' => an_instance_of(SmartCore::Container::Entities::MemoizedDependency)
           }
         )
       end

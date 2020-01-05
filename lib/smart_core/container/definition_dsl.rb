@@ -69,8 +69,12 @@ class SmartCore::Container
       #
       # @api public
       # @since 0.1.0
-      # @version 0.2.0
-      def register(dependency_name, memoize: true, &dependency_definition)
+      # @version 0.3.0
+      def register(
+        dependency_name,
+        memoize: SmartCore::Container::Registry::DEFAULT_MEMOIZATION_BEHAVIOR,
+        &dependency_definition
+      )
         @__container_definition_lock__.thread_safe do
           DependencyCompatability::Definition.prevent_namespace_overlap!(self, dependency_name)
 

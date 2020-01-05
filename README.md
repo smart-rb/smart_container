@@ -27,19 +27,19 @@ require 'smart_core/container'
 ```ruby
 class Container < SmartCore::Container
   namespace(:database) do # support for namespaces
-    register(:resolver) { SomeDatabaseResolver.new } # dependency registration
+    register(:resolver, memoize: true) { SomeDatabaseResolver.new } # dependency registration
 
     namespace(:cache) do # support for nested naespaces
-      register(:memcached) { MemcachedClient.new }
-      register(:redis) { RedisClient.new }
+      register(:memcached, memoize: true) { MemcachedClient.new }
+      register(:redis, memoize: true) { RedisClient.new }
     end
   end
 
   # root dependencies
-  register(:logger) { Logger.new(STDOUT) }
+  register(:logger, memoize: true) { Logger.new(STDOUT) }
 
   # do not memoize registered object
-  register(:random, memoize: false) { rand(1000) }
+  register(:random) { rand(1000) }
 end
 
 container = Container.new # create container instance

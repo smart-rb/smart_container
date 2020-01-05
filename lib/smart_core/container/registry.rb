@@ -7,6 +7,12 @@ class SmartCore::Container::Registry
   # @since 0.1.0
   include Enumerable
 
+  # @return [Boolean]
+  #
+  # @api private
+  # @since 0.3.0
+  DEFAULT_MEMOIZATION_BEHAVIOR = false
+
   # @return [Hash<Symbol,SmartCore::Container::Entity>]
   #
   # @api private
@@ -38,8 +44,8 @@ class SmartCore::Container::Registry
   #
   # @api private
   # @since 0.1.0
-  # @version 0.2.0
-  def register_dependency(name, memoize = true, &dependency_definition)
+  # @version 0.3.0
+  def register_dependency(name, memoize = DEFAULT_MEMOIZATION_BEHAVIOR, &dependency_definition)
     thread_safe { add_dependency(name, dependency_definition, memoize) }
   end
 
