@@ -32,13 +32,15 @@ class SmartCore::Container::Registry
   end
 
   # @param name [String, Symbol]
+  # @param memoize [Boolean]
   # @param dependency_definition [Block]
   # @return [void]
   #
   # @api private
   # @since 0.1.0
-  def register_dependency(name, &dependency_definition)
-    thread_safe { add_dependency(name, dependency_definition) }
+  # @version 0.2.0
+  def register_dependency(name, memoize = true, &dependency_definition)
+    thread_safe { add_dependency(name, dependency_definition, memoize) }
   end
 
   # @param name [String, Symbol]
@@ -157,13 +159,15 @@ class SmartCore::Container::Registry
 
   # @param dependency_name [String, Symbol]
   # @param dependency_definition [Proc]
+  # @param memoize [Boolean]
   # @return [SmartCore::Container::Entities::Dependency]
   #
   # @raise [SmartCore::Container::DependencyOverNamespaceOverlapError]
   #
   # @api private
   # @since 0.1.0
-  def add_dependency(dependency_name, dependency_definition)
+  # @version 0.2.0
+  def add_dependency(dependency_name, dependency_definition, memoize)
     if state_frozen?
       raise(SmartCore::Container::FrozenRegistryError, 'Can not modify frozen registry!')
     end
@@ -171,7 +175,7 @@ class SmartCore::Container::Registry
     prevent_namespace_overlap!(dependency_name)
 
     dependency_entity = SmartCore::Container::Entities::DependencyBuilder.build(
-      dependency_name, dependency_definition
+      dependency_name, dependency_definition, memoize
     )
 
     dependency_entity.tap { registry[dependency_name] = dependency_entity }
