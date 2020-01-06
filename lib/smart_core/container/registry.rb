@@ -13,6 +13,18 @@ class SmartCore::Container::Registry
   # @since 0.3.0
   DEFAULT_MEMOIZATION_BEHAVIOR = false
 
+  # @return [Boolean]
+  #
+  # @api private
+  # @since 0.4.0
+  DEFAULT_ITERATION_YIELD_BEHAVIOUR = false
+
+  # @return [Boolean]
+  #
+  # @api private
+  # @since 0.4.0
+  DEFAULT_KEY_EXTRACTION_BEHAVIOUR = false
+
   # @return [Hash<Symbol,SmartCore::Container::Entity>]
   #
   # @api private
@@ -82,6 +94,30 @@ class SmartCore::Container::Registry
   # @since 0.1.0
   def each(&block)
     thread_safe { enumerate(&block) }
+  end
+
+  # @param root_dependency_name [NilClass, String]
+  # @option yield_all [Boolean]
+  # @param block [Block]
+  # @return [Enumerable]
+  #
+  # @api private
+  # @since 0.4.0
+  def each_dependency(
+    root_dependency_name = nil,
+    yield_all: DEFAULT_ITERATION_YIELD_BEHAVIOUR,
+    &block
+  )
+    thread_safe { iterate(root_dependency_name, yield_all: yield_all, &block) }
+  end
+
+  # @option all_variants [Boolean]
+  # @return [Array<String>]
+  #
+  # @api private
+  # @since 0.4.0
+  def keys(all_variants: DEFAULT_KEY_EXTRACTION_BEHAVIOUR)
+    thread_safe { extract_keys(all_variants: all_variants) }
   end
 
   # @return [Hash<String|Symbol,SmartCore::Container::Entities::Base|Any>]
@@ -158,9 +194,8 @@ class SmartCore::Container::Registry
     dependency_name = indifferently_accessable_name(entity_path)
     registry.fetch(dependency_name)
   rescue KeyError
-    raise(SmartCore::Container::ResolvingError.new(<<~MESSAGE, path_part: dependency_name))
-      Entity with \"#{dependency_name}\" name does not exist
-    MESSAGE
+    error_message = "Entity with \"#{dependency_name}\" name does not exist"
+    raise(SmartCore::Container::ResolvingError.new(error_message, path_part: dependency_name))
   end
 
   # @param dependency_name [String, Symbol]
@@ -213,6 +248,58 @@ class SmartCore::Container::Registry
     # rubocop:enable Layout/RescueEnsureAlignment
 
     namespace_entity.tap { namespace_entity.append_definitions(dependencies_definition) }
+  end
+
+  # @param root_dependency_name [String, NilClass]
+  # @param block [Block]
+  # @option yield_all [Boolean]
+  # @yield [dependency_name, dependency]
+  # @yield_param dependency_name [String]
+  # @yield_param dependency [Any]
+  # @return [Enumerable]
+  #
+  # @api private
+  # @since 0.4.0
+  def iterate(root_dependency_name = nil, yield_all: DEFAULT_ITERATION_YIELD_BEHAVIOUR, &block)
+    enumerator = Enumerator.new do |yielder|
+      registry.each_pair do |dependency_name, dependency|
+        final_dependency_name =
+          if root_dependency_name
+            "#{root_dependency_name}" \
+            "#{SmartCore::Container::DependencyResolver::PATH_PART_SEPARATOR}" \
+            "#{dependency_name}"
+          else
+            dependency_name
+          end
+
+        case dependency
+        when SmartCore::Container::Entities::Dependency
+          yielder.yield(final_dependency_name, dependency.reveal)
+        when SmartCore::Container::Entities::Namespace
+          yielder.yield(final_dependency_name, dependency.reveal) if yield_all
+          dependency.reveal.registry.each_dependency(
+            final_dependency_name,
+            yield_all: yield_all,
+            &block
+          )
+        end
+      end
+    end
+
+    block_given? ? enumerator.each(&block) : enumerator.each
+  end
+
+  # @option all_variants [Boolean]
+  # @return [Array<String>]
+  #
+  # @api private
+  # @since 0.4.0
+  def extract_keys(all_variants: DEFAULT_KEY_EXTRACTION_BEHAVIOUR)
+    Set.new.tap do |dependency_names|
+      iterate(yield_all: all_variants) do |dependency_name, _dependency|
+        dependency_names << dependency_name
+      end
+    end.to_a
   end
 
   # @param name [String, Symbol]

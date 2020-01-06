@@ -20,6 +20,9 @@ module SmartCore
     require_relative 'container/dependency_resolver'
     require_relative 'container/mixin'
 
+    # @since 0.4.0
+    include ::Enumerable
+
     # @since 0.1.0
     include DefinitionDSL
 
@@ -101,6 +104,33 @@ module SmartCore
     def reload!
       thread_safe { build_registry! }
     end
+
+    # @option all_variants [Boolean]
+    # @return [Array<String>]
+    #
+    # @api public
+    # @since 0.4.0
+    def keys(all_variants: SmartCore::Container::Registry::DEFAULT_KEY_EXTRACTION_BEHAVIOUR)
+      thread_safe { registry.keys(all_variants: all_variants) }
+    end
+
+    # @option yield_all [Boolean]
+    # @param block [Block]
+    # @yield [dependency_name, dependency_value]
+    # @yield_param dependency_name [String]
+    # @yield_param dependency_value [Any, SmartCore::Container]
+    # @return [Enumerable]
+    #
+    # @api public
+    # @since 0.4.0
+    def each_dependency(
+      yield_all: SmartCore::Container::Registry::DEFAULT_ITERATION_YIELD_BEHAVIOUR,
+      &block
+    )
+      thread_safe { registry.each_dependency(yield_all: yield_all, &block) }
+    end
+    alias_method :each, :each_dependency
+    alias_method :each_pair, :each_dependency
 
     # @option resolve_dependencies [Boolean]
     # @return [Hash<String|Symbol,SmartCore::Container::Entities::Base|Any>]

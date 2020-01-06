@@ -24,6 +24,8 @@ require 'smart_core/container'
 
 ## Synopsis (demo)
 
+- container class creation:
+
 ```ruby
 class Container < SmartCore::Container
   namespace(:database) do # support for namespaces
@@ -41,16 +43,60 @@ class Container < SmartCore::Container
   # dependencies are not memoized by default (memoize: false)
   register(:random) { rand(1000) }
 end
+```
 
+- container instantiation and dependency resolving:
+
+```ruby
 container = Container.new # create container instance
+```
 
+```ruby
 container['database.resolver'] # => #<SomeDatabaseResolver:0x00007f0f0f1d6332>
 container['database.cache.redis'] # => #<RedisClient:0x00007f0f0f1d0158>
 container['logger'] # => #<Logger:0x00007f5f0f2f0158>
 
+container.resolve('logger') # #resolve(path) is an alias for #[](path)
+
 # non-memoized dependency
 container['random'] # => 352
 container['random'] # => 57
+
+# trying to resolve a namespace as dependency
+container['database'] # => SmartCore::Container::ResolvingError
+
+# but you can fetch any depenendency type (internal containers and values) via #fetch
+container.fetch('database') # => SmartCore::Container (nested container)
+container.fetch('database.resolver') # => #<SomeDatabaseResolver:0x00007f0f0f1d6332>
+```
+
+- container keys (dependency names):
+
+```ruby
+# get dependnecy keys (only dependencies)
+container.keys
+# => result:
+[
+  'database.resolver',
+  'database.cache.memcached',
+  'database.cache.redis',
+  'logger',
+  'random'
+]
+```
+```ruby
+# get all keys (namespaces and dependencies)
+container.keys(all_variants: true)
+# => result:
+[
+  'database', # namespace
+  'database.resolver',
+  'database.cache', # namespace
+  'database.cache.memcached',
+  'database.cache.redis',
+  'logger',
+  'random'
+]
 ```
 
 ---
