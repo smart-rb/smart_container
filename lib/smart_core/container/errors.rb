@@ -57,7 +57,7 @@ class SmartCore::Container
     #
     # @api private
     # @since 0.1.0
-    def initialize(messegae = nil, path_part:)
+    def initialize(message = nil, path_part:)
       @path_part = path_part
       super(message)
     end

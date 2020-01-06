@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.4.0] - 2020-01-06
+### Added
+- `#keys(all_variants: false)` - return a list of dependency keys
+  (`all_variants: true` is mean "including namespace kaeys");
+- `#each_dependency(yield_all: false) { |key, value| }` - iterate over conteiner's dependencies
+  (`yield_all: true` will include nested containers to iteration process);
+
 ## [0.3.0] - 2020-01-05
 ### Changed
 - Dependency resolving is not memoized by default (previously: totally memoized 😱);

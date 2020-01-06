@@ -5,6 +5,12 @@
 module SmartCore::Container::DependencyResolver
   require_relative 'dependency_resolver/route'
 
+  # @return [String]
+  #
+  # @api private
+  # @since 0.4.0
+  PATH_PART_SEPARATOR = '.'
+
   class << self
     # @param container [SmartCore::Container]
     # @param dependency_path [String, Symbol]
@@ -84,10 +90,10 @@ module SmartCore::Container::DependencyResolver
     # @api private
     # @since 0.1.0
     def process_resolving_error(dependency_path, error)
-      full_dependency_path = Route.build_path(dependency_path, error.path_part)
-      raise(SmartCore::Container::ResolvingError.new(<<~MESSAGE, path_part: full_dependency_path))
-        #{error.message} (incorrect path: "#{full_dependency_path}")
-      MESSAGE
+      full_dependency_path = Route.build_path(error.path_part)
+      message = "#{error.message} (incorrect path: \"#{full_dependency_path}\")"
+      error = SmartCore::Container::ResolvingError.new(message, path_part: full_dependency_path)
+      raise(error)
     end
   end
 end

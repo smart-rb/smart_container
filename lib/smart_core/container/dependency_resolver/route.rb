@@ -2,17 +2,12 @@
 
 # @api private
 # @since 0.1.0
+# @version 0.4.0
 class SmartCore::Container::DependencyResolver::Route
   require_relative 'route/cursor'
 
   # @since 0.1.0
   include Enumerable
-
-  # @return [String]
-  #
-  # @api private
-  # @since 0.1.0
-  PATH_PART_SEPARATOR = '.'
 
   class << self
     # @param path [String, Symbol]
@@ -28,8 +23,9 @@ class SmartCore::Container::DependencyResolver::Route
     #
     # @api private
     # @since 0.1.0
+    # @version 0.4.0
     def build_path(*path_parts)
-      path_parts.join(PATH_PART_SEPARATOR)
+      path_parts.join(SmartCore::Container::DependencyResolver::PATH_PART_SEPARATOR)
     end
   end
 
@@ -50,9 +46,10 @@ class SmartCore::Container::DependencyResolver::Route
   #
   # @api private
   # @since 0.1.0
+  # @version 0.4.0
   def initialize(path)
     @path = path
-    @path_parts = path.split(PATH_PART_SEPARATOR).freeze
+    @path_parts = path.split(SmartCore::Container::DependencyResolver::PATH_PART_SEPARATOR).freeze
     @size = @path_parts.size
   end
 
