@@ -7,6 +7,8 @@ All notable changes to this project will be documented in this file.
   (`all_variants: true` is mean "including namespace kaeys");
 - `#each_dependency(yield_all: false) { |key, value| }` - iterate over conteiner's dependencies
   (`yield_all: true` will include nested containers to iteration process);
+### Fixed
+- `SmartCore::Container::ResolvingError` class has incorrect message attribute name;
 
 ## [0.3.0] - 2020-01-05
 ### Changed
