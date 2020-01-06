@@ -92,8 +92,7 @@ module SmartCore::Container::DependencyResolver
     def process_resolving_error(dependency_path, error)
       full_dependency_path = Route.build_path(error.path_part)
       message = "#{error.message} (incorrect path: \"#{full_dependency_path}\")"
-      error = SmartCore::Container::ResolvingError.new(message, path_part: full_dependency_path)
-      raise(error)
+      raise(SmartCore::Container::ResolvingError.new(message, path_part: full_dependency_path))
     end
   end
 end
