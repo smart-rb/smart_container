@@ -1,7 +1,7 @@
 ---
 language: ruby
 cache: bundler
-os: [linux, osx]
+os: linux
 before_install:
 - gem install bundler -v 2.1.2
 script:
