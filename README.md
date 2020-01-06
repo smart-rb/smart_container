@@ -24,7 +24,7 @@ require 'smart_core/container'
 
 ## Synopsis (demo)
 
-- creation:
+- container class creation:
 
 ```ruby
 class Container < SmartCore::Container
@@ -45,7 +45,7 @@ class Container < SmartCore::Container
 end
 ```
 
-- instantiation and resolving:
+- container instantiation and dependency resolving:
 
 ```ruby
 container = Container.new # create container instance
@@ -70,7 +70,7 @@ container.fetch('database') # => SmartCore::Container (nested container)
 container.fetch('database.resolver') # => #<SomeDatabaseResolver:0x00007f0f0f1d6332>
 ```
 
-- keys:
+- container keys (dependency names):
 
 ```ruby
 # get dependnecy keys (only dependencies)
