@@ -112,32 +112,11 @@ module SmartCore::Container::DependencyResolver
 
       Route.build(entity_path).each do |cursor|
         resolved_entity = resolved_entity.registry.resolve(cursor.current_path)
-        prevent_cursor_overflow!(cursor, resolved_entity)
         extracted_entity = resolved_entity
         resolved_entity = resolved_entity.reveal
       end
 
       extracted_entity
-    end
-
-    # @param cursor [SmartCore::Container::DependencyResolver::Route::Cursor]
-    # @param entity [SmartCore::Container::Entities::Base]
-    # @return [void]
-    #
-    # @raise [SmartCore::Container::ResolvingError]
-    #
-    # @api private
-    # @since 0.5.0
-    # @version 0.5.0
-    def prevent_cursor_overflow!(cursor, entity)
-      if !cursor.last? && !entity.is_a?(SmartCore::Container::Entities::Namespace)
-        raise(
-          SmartCore::Container::ResolvingError.new(
-            'Trying to resolve nonexistent dependency',
-            path_part: cursor.current_path
-          )
-        )
-      end
     end
 
     # @param cursor [SmartCore::Container::DependencyResolver::Route::Cursor]
