@@ -39,6 +39,7 @@ module SmartCore::Container::DependencyResolver
       false
     end
 
+    # @param container [SmartCore::Container]
     # @param namespace_path [String, Symbol]
     # @return [Boolean]
     #
@@ -50,6 +51,7 @@ module SmartCore::Container::DependencyResolver
       false
     end
 
+    # @param container [SmartCore::Container]
     # @param dependency_path [String, Symbol]
     # @option memoized [NilClass, Boolean]
     # @return [Boolean]

@@ -132,7 +132,7 @@ module SmartCore
       thread_safe { DependencyResolver.namespace?(self, namespace_path) }
     end
 
-    # @param namespace_path [String, Symbol]
+    # @param dependency_path [String, Symbol]
     # @option memoized [NilClass, Boolean]
     # @return [Boolean]
     #
