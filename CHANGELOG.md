@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+### Added
+- Key predicates (`#key?(key)`, `#dependency?(path, memoized: nil/true/false)`, `#namespace?(path)`);
+
 ## [0.4.0] - 2020-01-06
 ### Added
 - `#keys(all_variants: false)` - return a list of dependency keys
