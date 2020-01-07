@@ -88,7 +88,7 @@ module SmartCore::Container::DependencyResolver
       entity = container
       Route.build(dependency_path).each do |cursor|
         entity = entity.registry.resolve(cursor.current_path)
-        prevent_ambigous_resolving!(cursor, entity)
+        prevent_ambiguous_resolving!(cursor, entity)
         entity = entity.reveal
       end
       entity
@@ -146,7 +146,7 @@ module SmartCore::Container::DependencyResolver
     #
     # @api private
     # @since 0.5.0
-    def prevent_ambigous_resolving!(cursor, entity)
+    def prevent_ambiguous_resolving!(cursor, entity)
       if cursor.last? && entity.is_a?(SmartCore::Container::Entities::Namespace)
         raise(
           SmartCore::Container::ResolvingError.new(
