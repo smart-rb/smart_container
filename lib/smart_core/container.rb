@@ -114,6 +114,34 @@ module SmartCore
       thread_safe { registry.keys(all_variants: all_variants) }
     end
 
+    # @param key [String, Symbol]
+    # @return [Boolean]
+    #
+    # @api public
+    # @since 0.5.0
+    def key?(key)
+      thread_safe { registry.key?(key) }
+    end
+
+    # @param namespace_path [String, Symbol]
+    # @return [Boolean]
+    #
+    # @api public
+    # @since 0.5.0
+    def namespace?(namespace_path)
+      thread_safe { registry.namespace?(namespace_path) }
+    end
+
+    # @param namespace_path [String, Symbol]
+    # @option memoized [NilClass, Boolean]
+    # @return [Boolean]
+    #
+    # @api public
+    # @since 0.5.0
+    def dependency?(dependency_path, memoized: nil)
+      thread_safe { registry.dependency?(dependency_path, memoized: memoized) }
+    end
+
     # @option yield_all [Boolean]
     # @param block [Block]
     # @yield [dependency_name, dependency_value]

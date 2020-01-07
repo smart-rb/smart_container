@@ -70,6 +70,19 @@ container.fetch('database') # => SmartCore::Container (nested container)
 container.fetch('database.resolver') # => #<SomeDatabaseResolver:0x00007f0f0f1d6332>
 ```
 
+- runtime-level dependency/namespace registration:
+
+```ruby
+container.namespace(:api) do
+  register(:provider) { GoogleProvider }
+end
+
+container.register('game_api') { 'overwatch' }
+
+container['api.provider'] # => GoogleProvider
+container['game_api'] # => 'overwatch'
+```
+
 - container keys (dependency names):
 
 ```ruby
@@ -97,6 +110,36 @@ container.keys(all_variants: true)
   'logger',
   'random'
 ]
+```
+
+- key predicates:
+  - `key?(key)` - has dependency or namespace?
+  - `namespace?(path)` - has namespace?
+  - `dependency?(path)` - has dependency?
+  - `dependency?(path, memoized: true)` - has memoized dependency?
+  - `dependency?(path, memoized: false)` - has non-memoized dependency?
+
+```ruby
+container.key?('database') # => true
+container.key?('database.cache.memcached') # => true
+
+container.dependency?('database') # => false
+container.dependency?('database.resolver') # => true
+
+container.namespace?('database') # => true
+container.namespace?('database.resolver') # => false
+
+container.dependency?('database.resolver', memoized: true) # => true
+container.dependency?('database.resolver', memoized: false) # => false
+
+container.dependency?('random', memoized: true) # => false
+container.dependency?('random', memoized: false) # => true
+```
+
+- state freeze:
+
+```ruby
+# documentation is coming;
 ```
 
 ---

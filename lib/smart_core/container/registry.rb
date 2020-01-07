@@ -40,6 +40,63 @@ class SmartCore::Container::Registry
     @access_lock = SmartCore::Container::ArbitaryLock.new
   end
 
+  # @param key [String, Symbol]
+  # @return [Boolean]
+  #
+  # @api private
+  # @since 0.5.0
+  def key?(key)
+    thread_safe do
+      begin
+        fetch_entity(entity_path)
+        true
+      rescue SmartCore::Container::ResolvingError
+        false
+      end
+    end
+  end
+
+  # @param namespace_path [String, Symbol]
+  # @return [Boolean]
+  #
+  # @api private
+  # @since 0.5.0
+  def namespace?(namespace_path)
+    thread_safe do
+      begin
+        fetch_entity(namespace_path).is_a?(SmartCore::Container::Entities::Namespace)
+      rescue SmartCore::Container::ResolvingError
+        false
+      end
+    end
+  end
+
+  # @param dependency_path [String, Symbol]
+  # @option memoized [NilClass, Boolean]
+  # @return [Boolean]
+  #
+  # @api private
+  # @since 0.5.0
+  def dependency?(dependency_path, memoized: nil)
+    thread_safe do
+      begin
+        entity = fetch_entity(dependency_path)
+
+        case
+        when memoized.nil?
+          entity.is_a?(SmartCore::Container::Entities::Dependency)
+        when !!memoized == true
+          entity.is_a?(SmartCore::Container::Entities::MemoizedDependency)
+        when !!memoized == false
+          entity.is_a?(SmartCore::Container::Entites::Dependency) &&
+            !entity.is_a?(SmartCore::Container::Entities::MemoizedDependency)
+        end
+      rescue SmartCore::Container::ResolvingError
+        false
+      end
+    end
+  end
+
   # @param entity_path [String, Symbol]
   # @return [SmartCore::Container::Entity]
   #
