@@ -21,6 +21,10 @@ RSpec.describe 'Key predicates' do
     expect(container.key?('database.cache.memcached')).to eq(true)
     expect(container.key?('logger')).to eq(true)
     expect(container.key?('random')).to eq(true)
+
+    # non-existent keys => false
+    expect(container.key?('services')).to eq(false)
+    expect(container.key?('database.presistence')).to eq(false)
   end
 
   specify 'dependency? - has dependency (any/memoized/non-memoized)' do
@@ -45,6 +49,14 @@ RSpec.describe 'Key predicates' do
     expect(container.dependency?('database.cache.memcached', memoized: false)).to eq(false)
     expect(container.dependency?('logger', memoized: false)).to eq(false)
     expect(container.dependency?('random', memoized: false)).to eq(true) # NON-memoized => true
+
+    # non-existent dependencies => false
+    expect(container.dependency?('database.layer')).to eq(false)
+    expect(container.dependency?('database.layer', memoized: true)).to eq(false)
+    expect(container.dependency?('database.layer', memoized: false)).to eq(false)
+    expect(container.dependency?('services')).to eq(false)
+    expect(container.dependency?('services', memoized: true)).to eq(false)
+    expect(container.dependency?('services', memoized: false)).to eq(false)
   end
 
   specify 'namespace? - has namespace?' do
@@ -57,5 +69,9 @@ RSpec.describe 'Key predicates' do
     expect(container.namespace?('database.cache.memcached')).to eq(false)
     expect(container.namespace?('logger')).to eq(false)
     expect(container.namespace?('random')).to eq(false)
+
+    # nonexistent namespaces => false
+    expect(container.namespace?('database.services')).to eq(false)
+    expect(container.namespace?('services')).to eq(false)
   end
 end
