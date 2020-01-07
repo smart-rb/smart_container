@@ -120,7 +120,7 @@ module SmartCore
     # @api public
     # @since 0.5.0
     def key?(key)
-      thread_safe { registry.key?(key) }
+      thread_safe { DependencyResolver.key?(self, key) }
     end
 
     # @param namespace_path [String, Symbol]
@@ -129,7 +129,7 @@ module SmartCore
     # @api public
     # @since 0.5.0
     def namespace?(namespace_path)
-      thread_safe { registry.namespace?(namespace_path) }
+      thread_safe { DependencyResolver.namespace?(self, namespace_path) }
     end
 
     # @param namespace_path [String, Symbol]
@@ -139,7 +139,7 @@ module SmartCore
     # @api public
     # @since 0.5.0
     def dependency?(dependency_path, memoized: nil)
-      thread_safe { registry.dependency?(dependency_path, memoized: memoized) }
+      thread_safe { DependencyResolver.dependency?(self, dependency_path, memoized: memoized) }
     end
 
     # @option yield_all [Boolean]
