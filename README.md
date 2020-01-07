@@ -142,6 +142,12 @@ container.dependency?('random', memoized: false) # => true
 # documentation is coming;
 ```
 
+- reloading:
+
+```ruby
+# documentation is coming;
+```
+
 ---
 
 ## Contributing
