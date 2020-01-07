@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [0.5.0] - 2020-01-07
 ### Added
 - Key predicates (`#key?(key)`, `#dependency?(path, memoized: nil/true/false)`, `#namespace?(path)`);
 
