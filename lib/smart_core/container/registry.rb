@@ -57,7 +57,7 @@ class SmartCore::Container::Registry
   # @api private
   # @since 0.1.0
   # @version 0.3.0
-  def register_dependency(name, memoize = DEFAULT_MEMOIZATION_BEHAVIOR, &dependency_definition)
+  def register_dependency(name, memoize: DEFAULT_MEMOIZATION_BEHAVIOR, &dependency_definition)
     thread_safe { add_dependency(name, dependency_definition, memoize) }
   end
 

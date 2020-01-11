@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.6.0] - 2020-01-12
+### Added
+- Missing memoization flag `:memoize` for runtime-based dependency registration:
+  - `memoize: false` by default;
+  - signature: `SmartCore::Container#register(dependency_name, memoize: false, &dependency)`
+
 ## [0.5.0] - 2020-01-07
 ### Added
 - Key predicates (`#key?(key)`, `#dependency?(path, memoized: nil/true/false)`, `#namespace?(path)`);

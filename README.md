@@ -74,10 +74,10 @@ container.fetch('database.resolver') # => #<SomeDatabaseResolver:0x00007f0f0f1d6
 
 ```ruby
 container.namespace(:api) do
-  register(:provider) { GoogleProvider }
+  register(:provider) { GoogleProvider } # without memoization
 end
 
-container.register('game_api') { 'overwatch' }
+container.register('game_api', memoize: true) { 'overwatch' } # with memoization
 
 container['api.provider'] # => GoogleProvider
 container['game_api'] # => 'overwatch'

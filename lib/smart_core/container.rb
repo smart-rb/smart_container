@@ -47,8 +47,14 @@ module SmartCore
     #
     # @api public
     # @sicne 0.1.0
-    def register(dependency_name, &dependency_definition)
-      thread_safe { registry.register_dependency(dependency_name, &dependency_definition) }
+    def register(
+      dependency_name,
+      memoize: SmartCore::Container::Registry::DEFAULT_MEMOIZATION_BEHAVIOR,
+      &dependency_definition
+    )
+      thread_safe do
+        registry.register_dependency(dependency_name, memoize: memoize, &dependency_definition)
+      end
     end
 
     # @param namespace_name [String, Symbol]

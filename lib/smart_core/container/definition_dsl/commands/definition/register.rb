@@ -36,7 +36,7 @@ module SmartCore::Container::DefinitionDSL::Commands::Definition
     # @since 0.1.0
     # @version 0.2.0
     def call(registry)
-      registry.register_dependency(dependency_name, memoize, &dependency_definition)
+      registry.register_dependency(dependency_name, memoize: memoize, &dependency_definition)
     end
 
     # @return [SmartCore::Container::DefinitionDSL::Commands::Definition::Register]
