@@ -11,5 +11,5 @@ AllCops:
     - spec/**/*.rb
     - Gemfile
     - Rakefile
-    - siege.gemspec
+    - smart_container.gemspec
     - bin/console
