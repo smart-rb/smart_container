@@ -3,7 +3,7 @@
 require_relative 'lib/smart_core/container/version'
 
 Gem::Specification.new do |spec|
-  spec.required_ruby_version = Gem::Requirement.new('>= 2.4.9')
+  spec.required_ruby_version = Gem::Requirement.new('>= 2.4.10')
 
   spec.name    = 'smart_container'
   spec.version = SmartCore::Container::VERSION
@@ -27,12 +27,12 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
 
-  spec.add_dependency 'smart_engine', '~> 0.2'
+  spec.add_dependency 'smart_engine', '~> 0.5'
 
   spec.add_development_dependency 'bundler',          '~> 2.1'
   spec.add_development_dependency 'rake',             '~> 13.0'
   spec.add_development_dependency 'rspec',            '~> 3.9'
-  spec.add_development_dependency 'armitage-rubocop', '~> 0.78'
-  spec.add_development_dependency 'simplecov',        '~> 0.17'
-  spec.add_development_dependency 'pry',              '~> 0.12'
+  spec.add_development_dependency 'armitage-rubocop', '~> 0.81'
+  spec.add_development_dependency 'simplecov',        '~> 0.18'
+  spec.add_development_dependency 'pry',              '~> 0.13'
 end
