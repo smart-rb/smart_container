@@ -136,16 +136,36 @@ container.dependency?('random', memoized: true) # => false
 container.dependency?('random', memoized: false) # => true
 ```
 
-- state freeze:
+- state freeze (`#freeze!`, `.#frozen?`):
 
 ```ruby
 # documentation is coming;
 ```
 
-- reloading:
+- reloading (`#reload!):
 
 ```ruby
 # documentation is coming;
+```
+
+- hash tre (`#hash_tree`, `#hash_tree(resolve_dependencies: true)`):
+
+```ruby
+# documentation is coming`;
+```
+
+--
+
+## Roadmap
+
+- support for instant dependency registration:
+
+```ruby
+# common (dynamic) way:
+register('dependency_name') { dependency_value }
+
+# instant vay:
+register('dependency_name', dependency_value)
 ```
 
 ---
