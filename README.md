@@ -148,7 +148,7 @@ container.dependency?('random', memoized: false) # => true
 # documentation is coming;
 ```
 
-- hash tre (`#hash_tree`, `#hash_tree(resolve_dependencies: true)`):
+- hash tree (`#hash_tree`, `#hash_tree(resolve_dependencies: true)`):
 
 ```ruby
 # documentation is coming`;
@@ -164,9 +164,17 @@ container.dependency?('random', memoized: false) # => true
 # common (dynamic) way:
 register('dependency_name') { dependency_value }
 
-# instant vay:
+# instant way:
 register('dependency_name', dependency_value)
 ```
+
+- support for memoization ignorance during dependency resolving:
+
+```ruby
+resolve('logger', :allocate) # Draft
+```
+
+- container composition;
 
 ---
 
