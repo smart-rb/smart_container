@@ -176,6 +176,19 @@ resolve('logger', :allocate) # Draft
 
 - container composition;
 
+- an ability to build container instance avoiding an explicit class definition:
+
+```ruby
+AppContainer = SmartCore::Container.define do
+  namespace :database do
+    register(:logger) { Logger.new }
+  end
+end # => an instance of Class<SmartCore::Container>
+
+AppContainer.resolve('database.logger') # => #<Logger:0x00007f5f0f2f0158>
+AppContainer['database.logger'] # => #<Logger:0x00007f5f0f2f0158>
+```
+
 ---
 
 ## Contributing
