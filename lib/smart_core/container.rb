@@ -20,6 +20,24 @@ module SmartCore
     require_relative 'container/dependency_resolver'
     require_relative 'container/mixin'
 
+    class << self
+      # @param initial_container_klass [Class<SmartCore::Container>]
+      # @param container_definitions [Block]
+      # @return [SmartCore::Container]
+      #
+      # @api public
+      # @since 0.7.0
+      def define(initial_container_klass = self, &container_definitions)
+        unless initial_container_klass <= SmartCore::Container
+          raise(SmartCore::Container::ArgumentError, <<~ERROR_MESSAGE)
+            Base class should be a type of SmartCore::Container
+          ERROR_MESSAGE
+        end
+
+        Class.new(initial_container_klass, &container_definitions).new
+      end
+    end
+
     # @since 0.4.0
     include ::Enumerable
 

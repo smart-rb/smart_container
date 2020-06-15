@@ -154,7 +154,43 @@ container.dependency?('random', memoized: false) # => true
 # documentation is coming`;
 ```
 
---
+- avoid explicit class definition (create container instance from anonymous class imidietly):
+
+```ruby
+# - create from empty container class -
+
+AppContainer = SmartCore::Container.define do
+  namespace :database do
+    register(:logger) { Logger.new }
+  end
+end # => an instance of Class<SmartCore::Container>
+
+AppContainer.resolve('database.logger') # => #<Logger:0x00007f5f0f2f0158>
+AppContainer['database.logger'] # => #<Logger:0x00007f5f0f2f0158>
+```
+
+```ruby
+# - create from another container class with a custom sub-definitions -
+
+class BasicContainer < SmartCore::Container
+  namespace(:api) do
+    register(:client) { Kickbox.new }
+  end
+end
+
+AppContainer = BasicContainer.define do
+  register(:db_driver) { Sequel }
+end
+# --- or ---
+AppContainer = SmartCore::Container.define(BasicContainer) do
+  register(:db_driver) { Sequel }
+end
+
+AppContainer['api.client'] # => #<Kickbox:0x00007f5f0f2f0158> (BasicContainer dependency)
+AppContainer['db_driver'] # => Sequel (AppContainer dependency)
+```
+
+---
 
 ## Roadmap
 
@@ -175,19 +211,6 @@ resolve('logger', :allocate) # Draft
 ```
 
 - container composition;
-
-- an ability to build container instance avoiding an explicit class definition:
-
-```ruby
-AppContainer = SmartCore::Container.define do
-  namespace :database do
-    register(:logger) { Logger.new }
-  end
-end # => an instance of Class<SmartCore::Container>
-
-AppContainer.resolve('database.logger') # => #<Logger:0x00007f5f0f2f0158>
-AppContainer['database.logger'] # => #<Logger:0x00007f5f0f2f0158>
-```
 
 ---
 
