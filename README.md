@@ -45,6 +45,26 @@ class Container < SmartCore::Container
 end
 ```
 
+- mixin:
+
+```ruby
+# full documentaiton is coming;
+
+class Application
+  include SmartCore::Container::Mixin
+
+  dependencies do
+    namespace(:database) do
+      register(:cache) { MemcachedClient.new }
+    end
+  end
+end
+
+# access:
+Application.container
+Application.new.container # NOTE: the same instance as Application.container
+```
+
 - container instantiation and dependency resolving:
 
 ```ruby
