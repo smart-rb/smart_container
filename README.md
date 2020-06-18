@@ -174,7 +174,7 @@ container.dependency?('random', memoized: false) # => true
 # documentation is coming`;
 ```
 
-- avoid explicit class definition (create container instance from anonymous class imidietly):
+- `SmartCore::Container.define` - avoid explicit class definition (create container instance from anonymous class imidietly):
 
 ```ruby
 # - create from empty container class -
