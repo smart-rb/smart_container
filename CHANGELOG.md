@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+### Added
+- `SmartCore::Container.define {}` - an ability to avoid explicit class definition that allows
+  to create container instances from an anonymous container class imidietly
+
 ## [0.6.0] - 2020-01-12
 ### Added
 - Missing memoization flag `:memoize` for runtime-based dependency registration:
