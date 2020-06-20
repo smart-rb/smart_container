@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [0.7.0] - 2020-06-20
 ### Added
 - `SmartCore::Container.define {}` - an ability to avoid explicit class definition that allows
   to create container instances from an anonymous container class imidietly
