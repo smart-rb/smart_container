@@ -232,6 +232,8 @@ resolve('logger', :allocate) # Draft
 
 - container composition;
 
+- support for fallback block in `.resolve` operation (similar to `Hash#fetch` works);
+
 ---
 
 ## Contributing
