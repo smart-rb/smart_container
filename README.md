@@ -214,6 +214,13 @@ AppContainer['db_driver'] # => Sequel (AppContainer dependency)
 
 ## Roadmap
 
+- dependency changement observing:
+
+```ruby
+container.observe('dependency.path') { puts 'changed!' }
+container.register('dependency.path') { 'kek' } # => invokes our registered callback and outputs 'changed!'
+```
+
 - support for instant dependency registration:
 
 ```ruby
