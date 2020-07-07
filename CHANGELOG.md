@@ -3,7 +3,7 @@ All notable changes to this project will be documented in this file.
 
 ## [0.8.0] - 2020-07-07
 ### Added
-- An ability to subscribe on dependency re-registration events:
+- An ability to observe dependency re-registrations:
   - `#observe(path, &observer) # => returns observer object` - listen specific dependency path;
   - `#unobserve(observer)` - unsubscribe concrete observer object;
   - `#clear_observers(path = nil)` - unsubscribe specific listenr or all listeners (`nil` parameter);
