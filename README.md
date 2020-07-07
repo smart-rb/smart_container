@@ -217,7 +217,9 @@ AppContainer['db_driver'] # => Sequel (AppContainer dependency)
 - dependency changement observing:
 
 ```ruby
-container.observe('dependency.path') { puts 'changed!' }
+container.observe('dependency.path') do |dependency_path, container|
+  puts "changed => #{container[dependency_path]}"
+end
 container.register('dependency.path') { 'kek' } # => invokes our registered callback and outputs 'changed!'
 ```
 
