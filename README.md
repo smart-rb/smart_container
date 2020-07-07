@@ -210,17 +210,28 @@ AppContainer['api.client'] # => #<Kickbox:0x00007f5f0f2f0158> (BasicContainer de
 AppContainer['db_driver'] # => Sequel (AppContainer dependency)
 ```
 
+- dependency changement observing:
+  - at this moment only the full path patterns are supported (pattern-based pathes are not supported);
+  - `#observe(path, &observer) => observer` - subscribe a custom block to dependency changement events (your proc will be invoked with `|path, container|` attributes);
+  - `#unobserve(observer)` - unsubscribe concrete observer from dependency observing;
+  - `#clear_listeners(entity_path = nil)` - unsubscribe all observers from concrete path or from all pathes (`nil` parameters);
+
+```ruby
+observer = container.observe('dependency.path') do |dependency_path, container|
+  puts "changed => #{container[dependency_path]}"
+end
+container.register('dependency.path') { 'kek' } # => invokes our registered callback and outputs 'changed! => kek'
+container.unobserve(observer) # removes created observer from dependency changement observing;
+```
+
 ---
 
 ## Roadmap
 
-- dependency changement observing:
+- pattern-based pathes in dependency changement observing;
 
 ```ruby
-container.observe('dependency.path') do |dependency_path, container|
-  puts "changed => #{container[dependency_path]}"
-end
-container.register('dependency.path') { 'kek' } # => invokes our registered callback and outputs 'changed!'
+container.observe('path.*') { puts 'kek!' } # subscribe to all changements in `path` namespace;
 ```
 
 - support for instant dependency registration:
