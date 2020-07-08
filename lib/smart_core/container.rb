@@ -204,8 +204,9 @@ module SmartCore
 
     # @param entity_path [String]
     # @param observer [Block]
-    # @yield [dependency]
-    # @yieldparam dependency [Any]
+    # @yield [entity_path, container]
+    # @yieldparam entity_path [String]
+    # @yieldparam container [SmartCore::Container]
     # @return [SmartCore::Container::DependencyWatcher::Observer]
     #
     # @api public
@@ -215,7 +216,7 @@ module SmartCore
     end
     alias_method :subscribe, :observe
 
-    # @parm observer [SmartCore::Container::DependencyWatcher::Observer]
+    # @param observer [SmartCore::Container::DependencyWatcher::Observer]
     # @return [Boolean]
     #
     # @api public
@@ -225,7 +226,7 @@ module SmartCore
     end
     alias_method :unsubscribe, :unobserve
 
-    # @param entity_path [String, Symbol]
+    # @param entity_path [String, Symbol, NilClass]
     # @return [void]
     #
     # @api public

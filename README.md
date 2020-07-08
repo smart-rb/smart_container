@@ -235,7 +235,7 @@ AppContainer['db_driver'] # => Sequel (AppContainer dependency)
   - at this moment only the full entity path patterns are supported (pattern-based pathes are not supported yet);
   - you can subscribe on namespace changements (when the full namespace is re-registered) and dependency changement (when some dependency has been changed);
   - `#observe(path, &observer) => observer` - subscribe a custom block to dependency changement events (your proc will be invoked with `|path, container|` attributes);
-  - `#unobserve(observer)` - unsubscribe concrete observer from dependency observing;
+  - `#unobserve(observer)` - unsubscribe concrete observer from dependency observing (returns `true` (unsubscribed) or `false` (nothing to unsubscribe));
   - `#clear_observers(entity_path = nil)` - unsubscribe all observers from concrete path or from all pathes (`nil` parameters);
 - aliases:
   - `#observe` => `#subscribe`;

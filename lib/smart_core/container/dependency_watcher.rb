@@ -25,7 +25,7 @@ class SmartCore::Container::DependencyWatcher
     thread_safe { notify_listeners(entity_path) }
   end
 
-  # @param entity_path [String]
+  # @param entity_path [String, Symbol]
   # @param observer [Block]
   # @return [SmartCore::Container::DependencyWatcher::Observer]
   #
@@ -44,7 +44,7 @@ class SmartCore::Container::DependencyWatcher
     thread_safe { remove_listener(observer) }
   end
 
-  # @param entity_path [String, Symbol]
+  # @param entity_path [String, Symbol, NilClass]
   # @return [void]
   #
   # @api private
@@ -77,7 +77,7 @@ class SmartCore::Container::DependencyWatcher
     observers.fetch(entity_path).each(&:notify!) if observers.key?(entity_path)
   end
 
-  # @param entity_path [String]
+  # @param entity_path [String, Symbol]
   # @param observer [Proc]
   # @return [SmartCore::Container::DependencyWatcher::Observer]
   #
@@ -93,7 +93,7 @@ class SmartCore::Container::DependencyWatcher
   end
 
   # @param observer [SmartCore::Container::DependencyWatcher::Observer]
-  # @return [void]
+  # @return [Boolean]
   #
   # @api private
   # @since 0.8.0
