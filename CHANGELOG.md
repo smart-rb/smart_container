@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.8.0] - 2020-07-07
+## [0.8.0] - 2020-07-08
 ### Added
 - An ability to observe dependency re-registrations:
   - `#observe(path, &observer) # => observer object` - listen specific dependency path;
