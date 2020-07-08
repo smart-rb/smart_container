@@ -22,9 +22,24 @@ require 'smart_core/container'
 
 ---
 
-## Synopsis (demo)
+- [Functionality](#functionality)
+  - [container class creation](#container-class-creation)
+  - [mixin](#mixin)
+  - [container instantiation and dependency resolving](#container-instantiation-and-dependency-resolving)
+  - [runtime-level dependency/namespace registration](#runtime-level-dependency-namespace-registration)
+  - [container keys (dependency names)](#container-keys-dependency-names)
+  - [key predicates](#key-predicates)
+  - [state freeze](#state-freeze)
+  - [hash tree](#hash-tree)
+  - [explicit class definition](#explicit-class-definition)
+  - [dependency changement observing](#dependency-changement-observing)
+- [Roadmap](#roadmap)
 
-- container class creation:
+---
+
+## Functionality
+
+#### container class creation
 
 ```ruby
 class Container < SmartCore::Container
@@ -47,7 +62,7 @@ end
 
 ---
 
-- mixin:
+#### mixin
 
 ```ruby
 # full documentaiton is coming;
@@ -69,7 +84,7 @@ Application.new.container # NOTE: the same instance as Application.container
 
 ---
 
-- container instantiation and dependency resolving:
+#### container instantiation and dependency resolving
 
 ```ruby
 container = Container.new # create container instance
@@ -94,9 +109,9 @@ container.fetch('database') # => SmartCore::Container (nested container)
 container.fetch('database.resolver') # => #<SomeDatabaseResolver:0x00007f0f0f1d6332>
 ```
 
---
+---
 
-- runtime-level dependency/namespace registration:
+#### runtime-level dependency/namespace registration
 
 ```ruby
 container.namespace(:api) do
@@ -111,7 +126,7 @@ container['game_api'] # => 'overwatch'
 
 ---
 
-- container keys (dependency names):
+#### container keys (dependency names):
 
 ```ruby
 # get dependnecy keys (only dependencies)
@@ -142,6 +157,8 @@ container.keys(all_variants: true)
 
 ---
 
+#### key predicates
+
 - key predicates:
   - `key?(key)` - has dependency or namespace?
   - `namespace?(path)` - has namespace?
@@ -168,6 +185,8 @@ container.dependency?('random', memoized: false) # => true
 
 ---
 
+#### state freeze
+
 - state freeze (`#freeze!`, `.#frozen?`):
 
 ```ruby
@@ -184,6 +203,8 @@ container.dependency?('random', memoized: false) # => true
 
 ---
 
+#### hash tree
+
 - hash tree (`#hash_tree`, `#hash_tree(resolve_dependencies: true)`):
 
 ```ruby
@@ -191,6 +212,8 @@ container.dependency?('random', memoized: false) # => true
 ```
 
 ---
+
+#### explicit class definition
 
 - `SmartCore::Container.define` - avoid explicit class definition (allows to create container instance from an anonymous container class immidietly):
 
@@ -229,6 +252,8 @@ AppContainer['db_driver'] # => Sequel (AppContainer dependency)
 ```
 
 ---
+
+#### dependency changement observing
 
 - dependency changement observing:
   - you can subscribe only on container instances (on container instance changements);
