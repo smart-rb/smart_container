@@ -197,7 +197,7 @@ container.dependency?('random', memoized: false) # => true
 
 ---
 
-### reloading
+#### reloading
 
 - reloading (`#reload!):
 
