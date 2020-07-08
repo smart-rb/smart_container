@@ -212,7 +212,7 @@ container.dependency?('random', memoized: false) # => true
 - hash tree (`#hash_tree`, `#hash_tree(resolve_dependencies: true)`):
 
 ```ruby
-# documentation is coming`;
+# documentation is coming;
 ```
 
 ---
