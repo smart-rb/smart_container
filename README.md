@@ -277,7 +277,9 @@ container = SmartCore::Container.define do
     register(:stats) { 'stat_db' }
   end
 end
+```
 
+```ruby
 # observe entity change
 entity_observer = container.observe('database.stats') do |dependency_path, container|
   puts "changed => '#{container[dependency_path]}'"
@@ -287,7 +289,9 @@ end
 namespace_observer = container.observe('database') do |namespace_path, container|
   puts "changed => '#{namespace_path}'"
 end
+```
 
+```ruby
 container.register('database.stats') { 'kek' } # => invokes entity_observer and outputs "changed! => 'kek'"
 container.namespace('database') {} # => invoks namespace_observer and outputs "changed => 'database'"
 
