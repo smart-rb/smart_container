@@ -22,6 +22,8 @@ require 'smart_core/container'
 
 ---
 
+## Table of cotnents
+
 - [Functionality](#functionality)
   - [container class creation](#container-class-creation)
   - [mixin](#mixin)
@@ -30,6 +32,7 @@ require 'smart_core/container'
   - [container keys (dependency names)](#container-keys-dependency-names)
   - [key predicates](#key-predicates)
   - [state freeze](#state-freeze)
+  - [reloading](#reloading)
   - [hash tree](#hash-tree)
   - [explicit class definition](#explicit-class-definition)
   - [dependency changement observing](#dependency-changement-observing)
@@ -194,6 +197,8 @@ container.dependency?('random', memoized: false) # => true
 ```
 
 ---
+
+### reloading
 
 - reloading (`#reload!):
 
