@@ -213,6 +213,7 @@ module SmartCore
     def observe(entity_path, &observer) # TODO: support for pattern-based pathes
       thread_safe { watcher.watch(entity_path, &observer) }
     end
+    alias_method :subscribe, :observe
 
     # @parm observer [SmartCore::Container::DependencyWatcher::Observer]
     # @return [Boolean]
@@ -220,8 +221,9 @@ module SmartCore
     # @api public
     # @since 0.8.0
     def unobserve(observer)
-      thread_safe { watcher.unwatch(obaerver) }
+      thread_safe { watcher.unwatch(observer) }
     end
+    alias_method :unsubscribe, :unobserve
 
     # @param entity_path [String, Symbol]
     # @return [void]
@@ -231,6 +233,7 @@ module SmartCore
     def clear_observers(entity_path = nil) # TODO: support for pattern-based pathes
       thread_safe { watcher.clear_listeners(entity_path) }
     end
+    alias_method :clear_listeners, :clear_observers
 
     private
 

@@ -84,6 +84,10 @@ class SmartCore::Container::DependencyWatcher
   # @api private
   # @since 0.8.0
   def listen(entity_path, observer) # TODO: support for pattern-based pathes
+    raise(SmartCore::Container::ArgumentError, <<~ERROR_MESSAGE) unless observer.is_a?(Proc)
+      Observer is missing: you should provide an observer proc object (block).
+    ERROR_MESSAGE
+
     entity_path = indifferently_accessable_path(entity_path)
     Observer.new(container, entity_path, observer).tap { |obs| observers[entity_path] << obs }
   end
@@ -121,7 +125,7 @@ class SmartCore::Container::DependencyWatcher
       observers.each_value(&:clear)
     else
       entity_path = indifferently_accessable_path(entity_path)
-      observers[entity_path].clear if observers.key?[entity_path]
+      observers[entity_path].clear if observers.key?(entity_path)
     end
   end
 
