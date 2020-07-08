@@ -45,6 +45,8 @@ class Container < SmartCore::Container
 end
 ```
 
+---
+
 - mixin:
 
 ```ruby
@@ -64,6 +66,8 @@ end
 Application.container
 Application.new.container # NOTE: the same instance as Application.container
 ```
+
+---
 
 - container instantiation and dependency resolving:
 
@@ -90,6 +94,8 @@ container.fetch('database') # => SmartCore::Container (nested container)
 container.fetch('database.resolver') # => #<SomeDatabaseResolver:0x00007f0f0f1d6332>
 ```
 
+--
+
 - runtime-level dependency/namespace registration:
 
 ```ruby
@@ -102,6 +108,8 @@ container.register('game_api', memoize: true) { 'overwatch' } # with memoization
 container['api.provider'] # => GoogleProvider
 container['game_api'] # => 'overwatch'
 ```
+
+---
 
 - container keys (dependency names):
 
@@ -132,6 +140,8 @@ container.keys(all_variants: true)
 ]
 ```
 
+---
+
 - key predicates:
   - `key?(key)` - has dependency or namespace?
   - `namespace?(path)` - has namespace?
@@ -156,11 +166,15 @@ container.dependency?('random', memoized: true) # => false
 container.dependency?('random', memoized: false) # => true
 ```
 
+---
+
 - state freeze (`#freeze!`, `.#frozen?`):
 
 ```ruby
 # documentation is coming;
 ```
+
+---
 
 - reloading (`#reload!):
 
@@ -168,11 +182,15 @@ container.dependency?('random', memoized: false) # => true
 # documentation is coming;
 ```
 
+---
+
 - hash tree (`#hash_tree`, `#hash_tree(resolve_dependencies: true)`):
 
 ```ruby
 # documentation is coming`;
 ```
+
+---
 
 - `SmartCore::Container.define` - avoid explicit class definition (allows to create container instance from an anonymous container class immidietly):
 
@@ -212,13 +230,53 @@ AppContainer['db_driver'] # => Sequel (AppContainer dependency)
 
 ---
 
-## Roadmap
-
 - dependency changement observing:
+  - you can subscribe only on container instances (on container instance changements);
+  - at this moment only the full entity path patterns are supported (pattern-based pathes are not supported yet);
+  - you can subscribe on namespace changements (when the full namespace is re-registered) and dependency changement (when some dependency has been changed);
+  - `#observe(path, &observer) => observer` - subscribe a custom block to dependency changement events (your proc will be invoked with `|path, container|` attributes);
+  - `#unobserve(observer)` - unsubscribe concrete observer from dependency observing (returns `true` (unsubscribed) or `false` (nothing to unsubscribe));
+  - `#clear_observers(entity_path = nil)` - unsubscribe all observers from concrete path or from all pathes (`nil` parameters);
+- aliases:
+  - `#observe` => `#subscribe`;
+  - `#unobserve` => `#unsubscribe`;
+  - `#clear_observers` => `#clear_listeners`;
 
 ```ruby
-container.observe('dependency.path') { puts 'changed!' }
-container.register('dependency.path') { 'kek' } # => invokes our registered callback and outputs 'changed!'
+container = SmartCore::Container.define do
+  namespace(:database) do
+    register(:stats) { 'stat_db' }
+  end
+end
+
+# observe entity change
+entity_observer = container.observe('database.stats') do |dependency_path, container|
+  puts "changed => '#{container[dependency_path]}'"
+end
+
+# observe namespace change
+namespace_observer = container.observe('database') do |namespace_path, container|
+  puts "changed => '#{namespace_path}'"
+end
+
+container.register('database.stats') { 'kek' } # => invokes entity_observer and outputs "changed! => 'kek'"
+container.namespace('database') {} # => invoks namespace_observer and outputs "changed => 'database'"
+
+container.unobserve(observer) # unsubscribe entity_observer from dependency changement observing;
+container.clear_observers # unsubscribe all observers
+
+container.register('database.stats') { 'kek' } # no one to listen this changement... :)
+container.namespace('database') {} # no one to listen this changement... :)
+```
+
+---
+
+## Roadmap
+
+- pattern-based pathes in dependency changement observing;
+
+```ruby
+container.observe('path.*') { puts 'kek!' } # subscribe to all changements in `path` namespace;
 ```
 
 - support for instant dependency registration:

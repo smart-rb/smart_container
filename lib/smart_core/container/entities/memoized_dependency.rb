@@ -12,7 +12,7 @@ module SmartCore::Container::Entities
     # @since 0.2.0
     def initialize(dependency_name, dependency_definition)
       super(dependency_name, dependency_definition)
-      @lock = SmartCore::Container::ArbitaryLock.new
+      @lock = SmartCore::Container::ArbitraryLock.new
     end
 
     # @return [Any]

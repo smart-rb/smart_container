@@ -7,10 +7,10 @@ require 'smart_core'
 module SmartCore
   # @api public
   # @since 0.1.0
-  class Container
+  class Container # rubocop:disable Metrics/ClassLength
     require_relative 'container/version'
     require_relative 'container/errors'
-    require_relative 'container/arbitary_lock'
+    require_relative 'container/arbitrary_lock'
     require_relative 'container/key_guard'
     require_relative 'container/entities'
     require_relative 'container/definition_dsl'
@@ -18,6 +18,7 @@ module SmartCore
     require_relative 'container/registry'
     require_relative 'container/registry_builder'
     require_relative 'container/dependency_resolver'
+    require_relative 'container/dependency_watcher'
     require_relative 'container/mixin'
 
     class << self
@@ -56,7 +57,7 @@ module SmartCore
     # @since 0.1.0
     def initialize
       build_registry!
-      @access_lock = ArbitaryLock.new
+      @access_lock = ArbitraryLock.new
     end
 
     # @param dependency_name [String, Symbol]
@@ -65,6 +66,7 @@ module SmartCore
     #
     # @api public
     # @sicne 0.1.0
+    # @version 0.8.0
     def register(
       dependency_name,
       memoize: SmartCore::Container::Registry::DEFAULT_MEMOIZATION_BEHAVIOR,
@@ -72,6 +74,7 @@ module SmartCore
     )
       thread_safe do
         registry.register_dependency(dependency_name, memoize: memoize, &dependency_definition)
+        watcher.notify(dependency_name)
       end
     end
 
@@ -81,8 +84,12 @@ module SmartCore
     #
     # @api public
     # @since 0.1.0
+    # @version 0.8.0
     def namespace(namespace_name, &dependencies_definition)
-      thread_safe { registry.register_namespace(namespace_name, &dependencies_definition) }
+      thread_safe do
+        registry.register_namespace(namespace_name, &dependencies_definition)
+        watcher.notify(namespace_name)
+      end
     end
 
     # @param dependency_path [String, Symbol]
@@ -195,14 +202,56 @@ module SmartCore
     alias_method :to_h, :hash_tree
     alias_method :to_hash, :hash_tree
 
+    # @param entity_path [String]
+    # @param observer [Block]
+    # @yield [entity_path, container]
+    # @yieldparam entity_path [String]
+    # @yieldparam container [SmartCore::Container]
+    # @return [SmartCore::Container::DependencyWatcher::Observer]
+    #
+    # @api public
+    # @since 0.8.0
+    def observe(entity_path, &observer) # TODO: support for pattern-based pathes
+      thread_safe { watcher.watch(entity_path, &observer) }
+    end
+    alias_method :subscribe, :observe
+
+    # @param observer [SmartCore::Container::DependencyWatcher::Observer]
+    # @return [Boolean]
+    #
+    # @api public
+    # @since 0.8.0
+    def unobserve(observer)
+      thread_safe { watcher.unwatch(observer) }
+    end
+    alias_method :unsubscribe, :unobserve
+
+    # @param entity_path [String, Symbol, NilClass]
+    # @return [void]
+    #
+    # @api public
+    # @since 0.8.0
+    def clear_observers(entity_path = nil) # TODO: support for pattern-based pathes
+      thread_safe { watcher.clear_listeners(entity_path) }
+    end
+    alias_method :clear_listeners, :clear_observers
+
     private
+
+    # @return [SmartCore::Container::DependencyWatcher]
+    #
+    # @api private
+    # @since 0.8.0
+    attr_reader :watcher
 
     # @return [void]
     #
     # @api private
     # @since 0.1.0
+    # @version 0.8.0
     def build_registry!
       @registry = RegistryBuilder.build(self)
+      @watcher = SmartCore::Container::DependencyWatcher.new(self)
     end
 
     # @param block [Block]

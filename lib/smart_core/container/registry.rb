@@ -37,7 +37,7 @@ class SmartCore::Container::Registry
   # @since 0.1.0
   def initialize
     @registry = {}
-    @access_lock = SmartCore::Container::ArbitaryLock.new
+    @access_lock = SmartCore::Container::ArbitraryLock.new
   end
 
   # @param entity_path [String, Symbol]

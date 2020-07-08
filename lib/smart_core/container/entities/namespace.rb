@@ -18,7 +18,7 @@ class SmartCore::Container::Entities::Namespace < SmartCore::Container::Entities
     super(namespace_name)
     @container_klass = Class.new(SmartCore::Container)
     @container_instance = nil
-    @lock = SmartCore::Container::ArbitaryLock.new
+    @lock = SmartCore::Container::ArbitraryLock.new
   end
 
   # @return [SmartCore::Container]

@@ -17,7 +17,7 @@ class SmartCore::Container
       def included(base_klass)
         base_klass.instance_variable_set(:@__container_definition_commands__, CommandSet.new)
         base_klass.instance_variable_set(:@__container_instantiation_commands__, CommandSet.new)
-        base_klass.instance_variable_set(:@__container_definition_lock__, ArbitaryLock.new)
+        base_klass.instance_variable_set(:@__container_definition_lock__, ArbitraryLock.new)
         base_klass.singleton_class.send(:attr_reader, :__container_definition_commands__)
         base_klass.singleton_class.send(:attr_reader, :__container_instantiation_commands__)
         base_klass.extend(ClassMethods)
@@ -36,7 +36,7 @@ class SmartCore::Container
       def inherited(child_klass)
         child_klass.instance_variable_set(:@__container_definition_commands__, CommandSet.new)
         child_klass.instance_variable_set(:@__container_instantiation_commands__, CommandSet.new)
-        child_klass.instance_variable_set(:@__container_definition_lock__, ArbitaryLock.new)
+        child_klass.instance_variable_set(:@__container_definition_lock__, ArbitraryLock.new)
         SmartCore::Container::DefinitionDSL::Inheritance.inherit(base: self, child: child_klass)
         child_klass.singleton_class.prepend(ClassInheritance)
         super
