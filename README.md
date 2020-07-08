@@ -199,7 +199,7 @@ container.dependency?('random', memoized: false) # => true
 
 #### reloading
 
-- reloading (`#reload!):
+- reloading (`#reload!`):
 
 ```ruby
 # documentation is coming;
