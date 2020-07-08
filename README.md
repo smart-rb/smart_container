@@ -26,9 +26,9 @@ require 'smart_core/container'
 
 - [Functionality](#functionality)
   - [container class creation](#container-class-creation)
-  - [mixin](#mixin)
+  - [mixining to any class or module](#mixining-to-any-class-or-module)
   - [container instantiation and dependency resolving](#container-instantiation-and-dependency-resolving)
-  - [runtime-level dependency/namespace registration](#runtime-level-dependency-namespace-registration)
+  - [runtime-level dependency/namespace registration](#runtime-level-dependencynamespace-registration)
   - [container keys (dependency names)](#container-keys-dependency-names)
   - [key predicates](#key-predicates)
   - [state freeze](#state-freeze)
@@ -65,7 +65,7 @@ end
 
 ---
 
-#### mixin
+#### mixining to any class or module
 
 ```ruby
 # full documentaiton is coming;
@@ -162,12 +162,11 @@ container.keys(all_variants: true)
 
 #### key predicates
 
-- key predicates:
-  - `key?(key)` - has dependency or namespace?
-  - `namespace?(path)` - has namespace?
-  - `dependency?(path)` - has dependency?
-  - `dependency?(path, memoized: true)` - has memoized dependency?
-  - `dependency?(path, memoized: false)` - has non-memoized dependency?
+- `key?(key)` - has dependency or namespace?
+- `namespace?(path)` - has namespace?
+- `dependency?(path)` - has dependency?
+- `dependency?(path, memoized: true)` - has memoized dependency?
+- `dependency?(path, memoized: false)` - has non-memoized dependency?
 
 ```ruby
 container.key?('database') # => true
@@ -260,7 +259,7 @@ AppContainer['db_driver'] # => Sequel (AppContainer dependency)
 
 #### dependency changement observing
 
-- dependency changement observing:
+- features and limitations:
   - you can subscribe only on container instances (on container instance changements);
   - at this moment only the full entity path patterns are supported (pattern-based pathes are not supported yet);
   - you can subscribe on namespace changements (when the full namespace is re-registered) and dependency changement (when some dependency has been changed);
