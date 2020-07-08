@@ -26,7 +26,7 @@ require 'smart_core/container'
 
 - [Functionality](#functionality)
   - [container class creation](#container-class-creation)
-  - [mixining to any class or module](#mixining-to-any-class-or-module)
+  - [mixin](#mixin)
   - [container instantiation and dependency resolving](#container-instantiation-and-dependency-resolving)
   - [runtime-level dependency/namespace registration](#runtime-level-dependencynamespace-registration)
   - [container keys (dependency names)](#container-keys-dependency-names)
@@ -65,7 +65,7 @@ end
 
 ---
 
-#### mixining to any class or module
+#### mixin
 
 ```ruby
 # full documentaiton is coming;
