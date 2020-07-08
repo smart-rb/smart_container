@@ -168,7 +168,7 @@ RSpec.describe 'Dependency observers (#observe, #unobserve, #clear_listeners)' d
     expect(namespace_interceptor).to contain_exactly("api__#{container.object_id}")
   end
 
-  specify 'right reaction on incmpatible behavior and api usage' do
+  specify 'right reaction on incompatible behavior and api usage' do
     container = SmartCore::Container.define { namespace('path') {} }
 
     expect { container.observe(123) }.to raise_error(SmartCore::Container::ArgumentError)
