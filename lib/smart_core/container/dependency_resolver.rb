@@ -22,8 +22,9 @@ module SmartCore::Container::DependencyResolver
     #
     # @api private
     # @since 0.1.0
+    # @version 0.8.1
     def fetch(container, dependency_path)
-      container.registry.resolve(dependency_path).reveal
+      container.registry.resolve(dependency_path).reveal(container)
     end
 
     # @param container [SmartCore::Container]
@@ -86,12 +87,16 @@ module SmartCore::Container::DependencyResolver
     #
     # @api private
     # @since 0.1.0
+    # @version 0.8.1
     def resolve(container, dependency_path)
       entity = container
+      host_container = container
+
       Route.build(dependency_path).each do |cursor|
         entity = entity.registry.resolve(cursor.current_path)
         prevent_ambiguous_resolving!(cursor, entity)
-        entity = entity.reveal
+        entity = entity.reveal(host_container)
+        host_container = entity.is_a?(SmartCore::Container) ? entity : nil
       end
       entity
     rescue SmartCore::Container::ResolvingError => error
@@ -106,14 +111,17 @@ module SmartCore::Container::DependencyResolver
     #
     # @api private
     # @since 0.5.0
+    # @version 0.8.1
     def extract(container, entity_path)
       resolved_entity = container
       extracted_entity = container
+      host_container = container
 
       Route.build(entity_path).each do |cursor|
         resolved_entity = resolved_entity.registry.resolve(cursor.current_path)
         extracted_entity = resolved_entity
-        resolved_entity = resolved_entity.reveal
+        resolved_entity = resolved_entity.reveal(host_container)
+        host_container = resolved_entity.is_a?(SmartCore::Container) ? resolved_entity : nil
       end
 
       extracted_entity

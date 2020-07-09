@@ -19,6 +19,7 @@ module SmartCore
     require_relative 'container/registry_builder'
     require_relative 'container/dependency_resolver'
     require_relative 'container/dependency_watcher'
+    require_relative 'container/host'
     require_relative 'container/mixin'
 
     class << self
@@ -45,18 +46,48 @@ module SmartCore
     # @since 0.1.0
     include DefinitionDSL
 
+    # @return [NilClass]
+    #
+    # @api private
+    # @since 0.8.1
+    NO_HOST_CONTAINER = nil
+
+    # @return [NilClass]
+    #
+    # @api private
+    # @since 0.8.1
+    NO_HOST_PATH = nil
+
     # @return [SmartCore::Container::Registry]
     #
     # @api private
     # @since 0.1.0
     attr_reader :registry
 
+    # @return [SmartCore::Container::Host]
+    #
+    # @api private
+    # @since 0.8.1
+    attr_reader :host
+
+    # @return [SmartCore::Container::DependencyWatcher]
+    #
+    # @api private
+    # @since 0.8.0
+    attr_reader :watcher
+
+    # @option host_container [SmartCore::Container, NilClass]
+    # @option host_path [String, NilClass]
     # @return [void]
     #
     # @api public
     # @since 0.1.0
-    def initialize
+    # @version 0.8.1
+    def initialize(host_container: NO_HOST_CONTAINER, host_path: NO_HOST_PATH)
+      @host = SmartCore::Container::Host.build(host_container, host_path)
       build_registry!
+      @watcher = SmartCore::Container::DependencyWatcher.new(self)
+      @host_path = host_path
       @access_lock = ArbitraryLock.new
     end
 
@@ -87,7 +118,7 @@ module SmartCore
     # @version 0.8.0
     def namespace(namespace_name, &dependencies_definition)
       thread_safe do
-        registry.register_namespace(namespace_name, &dependencies_definition)
+        registry.register_namespace(namespace_name, self, &dependencies_definition)
         watcher.notify(namespace_name)
       end
     end
@@ -238,20 +269,13 @@ module SmartCore
 
     private
 
-    # @return [SmartCore::Container::DependencyWatcher]
-    #
-    # @api private
-    # @since 0.8.0
-    attr_reader :watcher
-
     # @return [void]
     #
     # @api private
     # @since 0.1.0
-    # @version 0.8.0
+    # @version 0.8.1
     def build_registry!
       @registry = RegistryBuilder.build(self)
-      @watcher = SmartCore::Container::DependencyWatcher.new(self)
     end
 
     # @param block [Block]

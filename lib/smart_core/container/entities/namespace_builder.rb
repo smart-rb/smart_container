@@ -2,40 +2,20 @@
 
 # @api private
 # @since 0.1.0
-class SmartCore::Container::Entities::NamespaceBuilder
-  class << self
-    # @param namespace_name [String]
-    # @return [SmartCore::Container::Entities::Namespace]
-    #
-    # @api private
-    # @since 0.1.0
-    def build(namespace_name)
-      new(namespace_name).build
+# @version 0.8.1
+module SmartCore::Container::Entities
+  module NamespaceBuilder
+    class << self
+      # @param namespace_name [String]
+      # @param host_container [SmartContainer, NilClass]
+      # @return [SmartCore::Container::Entities::Namespace]
+      #
+      # @api private
+      # @since 0.1.0
+      # @version 0.8.1
+      def build(namespace_name, host_container = SmartCore::Container::NO_HOST_CONTAINER)
+        SmartCore::Container::Entities::Namespace.new(namespace_name, host_container)
+      end
     end
   end
-
-  # @param namespace_name [String]
-  # @return [void]
-  #
-  # @api private
-  # @since 0.1.0
-  def initialize(namespace_name)
-    @namespace_name = namespace_name
-  end
-
-  # @return [SmartCore::Container::Entities::Namespace]
-  #
-  # @api private
-  # @since 0.1.0
-  def build
-    SmartCore::Container::Entities::Namespace.new(namespace_name)
-  end
-
-  private
-
-  # @return [String]
-  #
-  # @api private
-  # @since 0.1.0
-  attr_reader :namespace_name
 end

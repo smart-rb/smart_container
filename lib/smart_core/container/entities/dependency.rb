@@ -20,11 +20,13 @@ class SmartCore::Container::Entities::Dependency < SmartCore::Container::Entitie
     @dependency_definition = dependency_definition
   end
 
+  # @param host_container [SmartCore::Container, NilClass]
   # @return [Any]
   #
   # @api private
   # @since 0.1.0
-  def reveal
+  # @version 0.8.1
+  def reveal(host_container = SmartCore::Container::NO_HOST_CONTAINER)
     dependency_definition.call
   end
 

@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    smart_container (0.8.0)
+    smart_container (0.8.1)
       smart_engine (~> 0.5)
 
 GEM

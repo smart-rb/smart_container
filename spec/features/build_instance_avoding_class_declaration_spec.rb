@@ -58,6 +58,6 @@ RSpec.describe 'Build instance avoiding class declaration' do
 
     expect do # NOTE: try to build from correct container class
       basic_container_klass.define {}
-    end.not_to raise_error(SmartCore::Container::ArgumentError)
+    end.not_to raise_error
   end
 end

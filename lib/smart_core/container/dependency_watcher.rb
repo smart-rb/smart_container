@@ -12,7 +12,7 @@ class SmartCore::Container::DependencyWatcher
   # @since 0.8.0
   def initialize(container)
     @container = container
-    @observers = Hash.new { |k, v| k[v] = [] }
+    @observers = Hash.new { |h, k| h[k] = [] }
     @access_lock = SmartCore::Container::ArbitraryLock.new
   end
 
@@ -72,9 +72,11 @@ class SmartCore::Container::DependencyWatcher
   #
   # @api private
   # @since 0.8.0
+  # @version 0.8.1
   def notify_listeners(entity_path)
     entity_path = indifferently_accessable_path(entity_path)
     observers.fetch(entity_path).each(&:notify!) if observers.key?(entity_path)
+    container.host.notify_about_nested_changement(entity_path)
   end
 
   # @param entity_path [String, Symbol]

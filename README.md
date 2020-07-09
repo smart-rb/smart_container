@@ -292,19 +292,30 @@ end
 ```
 
 ```ruby
-container.register('database.stats') { 'kek' } # => invokes entity_observer and outputs "changed! => 'kek'"
+container.fetch('database').register('stats') = 'kek' # => invokes entity_observer and outputs "changed! => 'kek'"
 container.namespace('database') {} # => invoks namespace_observer and outputs "changed => 'database'"
 
 container.unobserve(observer) # unsubscribe entity_observer from dependency changement observing;
 container.clear_observers # unsubscribe all observers
 
-container.register('database.stats') { 'kek' } # no one to listen this changement... :)
+container.fetch('database').register('stats') = 'pek' # no one to listen this changement... :)
 container.namespace('database') {} # no one to listen this changement... :)
 ```
 
 ---
 
 ## Roadmap
+
+- convinient way to rebind registered dependnecies:
+
+```ruby
+# PoC
+
+container['dependency.path'] = 'pek' # simplest instant dependency registration without memoization
+# --- or/and ---
+container.rebind('dependency.path', memoize: true/false) { 'pek' } # bind with dynamic dependency registration
+container.rebind('dependency.path', memoize: true/false, 'pek') # bind with instant dependency registration
+```
 
 - pattern-based pathes in dependency changement observing;
 

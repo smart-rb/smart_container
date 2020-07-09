@@ -192,4 +192,110 @@ RSpec.describe 'Definition and instantiation' do
       SmartCore::Container::IncompatibleEntityNameError
     )
   end
+
+  describe 'host containers' do
+    specify 'host containers of nested containers' do
+      root_container = SmartCore::Container.define do
+        namespace(:database) do
+          register(:cache) { 'cache' }
+
+          namespace(:creds) do
+            register(:cache) { 123 }
+          end
+
+          namespace(:drivers) do
+            register(:cache) { 'redis' }
+          end
+        end
+      end
+
+      # NOTE: container host tree:
+      # -----------------------------
+      # @ROOT -> $database -> $creds
+      #                    -> $drivers
+      # -----------------------------
+
+      # @ROOT
+      expect(root_container.host).to be_a(SmartCore::Container::Host)
+      expect(root_container.host.present?).to eq(false)
+      expect(root_container.host.exists?).to eq(false)
+      expect(root_container.host.path).to eq(nil)
+      expect(root_container.host.container).to eq(nil)
+
+      # @ROOT->$database
+      db_container = root_container.fetch(:database)
+      expect(db_container.host).to be_a(SmartCore::Container::Host)
+      expect(db_container.host.present?).to eq(true)
+      expect(db_container.host.exists?).to eq(true)
+      expect(db_container.host.path).to eq('database')
+      expect(db_container.host.container).to eq(root_container)
+
+      # @ROOT->$database->$creds
+      creds_container = db_container.fetch(:creds)
+      expect(creds_container.host).to be_a(SmartCore::Container::Host)
+      expect(creds_container.host.present?).to eq(true)
+      expect(creds_container.host.exists?).to eq(true)
+      expect(creds_container.host.path).to eq('creds')
+      expect(creds_container.host.container).to eq(db_container)
+
+      # @ROOT->$database->$drivers
+      drivers_container = db_container.fetch(:drivers)
+      expect(drivers_container.host).to be_a(SmartCore::Container::Host)
+      expect(drivers_container.host.present?).to eq(true)
+      expect(drivers_container.host.exists?).to eq(true)
+      expect(drivers_container.host.path).to eq('drivers')
+      expect(drivers_container.host.container).to eq(db_container)
+    end
+
+    specify 'prevent of incompatible host container creation' \
+            '(requires both container and path)' do
+      # correct - OK
+      expect { SmartCore::Container.new }.not_to raise_error
+
+      # correct - OK
+      expect do
+        SmartCore::Container.new(host_container: nil, host_path: nil)
+      end.not_to raise_error
+
+      # correct - OK
+      expect do
+        SmartCore::Container.new(
+          host_container: (SmartCore::Container.define {}),
+          host_path: 'sample'
+        )
+      end.not_to raise_error
+
+      # incorrect - BAD
+      expect do
+        SmartCore::Container.new(
+          host_container: (SmartCore::Container.define {}),
+          host_path: nil
+        )
+      end.to raise_error(SmartCore::Container::ArgumentError)
+
+      # incorrect - BAD
+      expect do
+        SmartCore::Container.new(
+          host_container: nil, # should be a type of SmartCore::Container
+          host_path: 'sample'
+        )
+      end.to raise_error(SmartCore::Container::ArgumentError)
+
+      # incorrect - BAD
+      expect do
+        SmartCore::Container.new(
+          host_container: (SmartCore::Container.define {}),
+          host_path: 12345 # should be a type of string
+        )
+      end.to raise_error(SmartCore::Container::ArgumentError)
+
+      # incorrect - BAD
+      expect do
+        SmartCore::Container.new(
+          host_container: 123, # should be a type of SmartCore::Container
+          host_path: 'sample'
+        )
+      end.to raise_error(SmartCore::Container::ArgumentError)
+    end
+  end
 end

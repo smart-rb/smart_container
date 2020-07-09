@@ -1,6 +1,16 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.8.1] - 2020-07-09
+### Changed
+- *Core*
+  - refactored `SmartCore::Container::Entities::NamespaceBuilder` and `SmartCore::Container::Entities::DependencyBuilder`
+    (from stateful-based logic on instances to stateless-based logic on modules);
+
+### Fixed
+- Subscription to the nested dependency changement doesn't work
+  (incomplete nested dependency path in watcher notification);
+
 ## [0.8.0] - 2020-07-08
 ### Added
 - An ability to observe dependency re-registrations:

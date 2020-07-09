@@ -9,24 +9,35 @@ class SmartCore::Container::Entities::Namespace < SmartCore::Container::Entities
   # @since 0.1.0
   alias_method :namespace_name, :external_name
 
+  # @return [NilClass, SmartCore::Container]
+  #
+  # @api private
+  # @since 0.8.01
+  attr_reader :host_container
+
   # @param namespace_name [String]
+  # @param host_container [NilClass, SmartCore::Container]
   # @return [void]
   #
   # @api private
   # @since 0.1.0
-  def initialize(namespace_name)
+  # @version 0.8.1
+  def initialize(namespace_name, host_container = SmartCore::Container::NO_HOST_CONTAINER)
     super(namespace_name)
     @container_klass = Class.new(SmartCore::Container)
     @container_instance = nil
+    @host_container = host_container
     @lock = SmartCore::Container::ArbitraryLock.new
   end
 
+  # @param runtime_host_container [SmartCore::Container, NilClass]
   # @return [SmartCore::Container]
   #
   # @api private
   # @since 0.1.0
-  def reveal
-    thread_safe { container_instance }
+  # @version 0.8.1
+  def reveal(runtime_host_container = SmartCore::Container::NO_HOST_CONTAINER)
+    thread_safe { container_instance(runtime_host_container) }
   end
 
   # @param dependencies_definition [Proc]
@@ -54,12 +65,18 @@ class SmartCore::Container::Entities::Namespace < SmartCore::Container::Entities
   # @since 0.1.0
   attr_reader :container_klass
 
+  # @param runtime_host_container [SmartCore::Container, NilClass]
   # @return [SmartCore::Container]
   #
   # @api private
   # @since 0.1.0
-  def container_instance
-    @container_instance ||= container_klass.new
+  # @version 0.8.1
+  def container_instance(runtime_host_container = SmartCore::Container::NO_HOST_CONTAINER)
+    @host_container ||= runtime_host_container
+    @container_instance ||= container_klass.new(
+      host_container: @host_container,
+      host_path: @host_container && namespace_name
+    )
   end
 
   # @param block [Block]

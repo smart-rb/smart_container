@@ -15,11 +15,13 @@ module SmartCore::Container::Entities
       @lock = SmartCore::Container::ArbitraryLock.new
     end
 
+    # @param host_container [SmartCore::Container, NilClass]
     # @return [Any]
     #
     # @api private
     # @since 0.2.0
-    def reveal
+    # @version 0.8.1
+    def reveal(host_container = SmartCore::Container::NO_HOST_CONTAINER)
       @lock.thread_safe do
         unless instance_variable_defined?(:@revealed_dependency)
           @revealed_dependency = dependency_definition.call
