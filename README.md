@@ -35,7 +35,7 @@ require 'smart_core/container'
   - [reloading](#reloading)
   - [hash tree](#hash-tree)
   - [explicit class definition](#explicit-class-definition)
-  - [dependency changement observing](#dependency-changement-observing)
+  - [observe dependency changes](#dependency-changement-observing)
 - [Roadmap](#roadmap)
 
 ---
@@ -257,7 +257,7 @@ AppContainer['db_driver'] # => Sequel (AppContainer dependency)
 
 ---
 
-#### dependency changement observing
+#### observe dependency changes
 
 - features and limitations:
   - you can subscribe only on container instances (on container instance changements);
