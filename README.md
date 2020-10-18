@@ -343,6 +343,17 @@ resolve('logger', :allocate) # Draft
 
 - support for fallback block in `.resolve` operation (similar to `Hash#fetch` works);
 
+- inline temporary dependency switch:
+
+```ruby
+with(logger: Logger.new, db: DB.new) do
+  # logger is a new logger
+  # db is a new db
+end
+
+# out of block: logger is an old logger, db is an old db
+```
+
 ---
 
 ## Contributing
