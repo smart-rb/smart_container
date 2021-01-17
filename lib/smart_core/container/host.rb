@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+using SmartCore::Ext::BasicObjectAsObject
+
 # @api private
 # @since 0.8.1
 class SmartCore::Container::Host
@@ -10,15 +12,16 @@ class SmartCore::Container::Host
     #
     # @api private
     # @since 0.8.1
-    def build(container, path) # rubocop:disable Metrics/AbcSize
-      if (container == nil && !path == nil) || (!container == nil && path == nil)
+    # rubocop:disable Metrics/AbcSize, Style/NilComparison
+    def build(container, path)
+      if (container.nil? && !path.nil?) || (!container.nil? && path.nil?)
         raise(SmartCore::Container::ArgumentError, <<~ERROR_MESSAGE)
           Host container requires both host container instance and host container path
           (container: #{container.inspect} / path: #{path.inspect})
         ERROR_MESSAGE
       end
 
-      if (!container == nil && !path == nil) &&
+      if (!container.nil? && !path.nil?) &&
          (!container.is_a?(SmartCore::Container) || !path.is_a?(String))
         raise(SmartCore::Container::ArgumentError, <<~ERROR_MESSAGE)
           Host container should be a type of SmartCore::Container
@@ -28,6 +31,7 @@ class SmartCore::Container::Host
 
       new(container, path)
     end
+    # rubocop:enable Metrics/AbcSize, Style/NilComparison
   end
 
   # @return [SmartCore::Container]
