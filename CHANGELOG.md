@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.9.0] - 2020-01-17
+### Added
+- Support for *Ruby@3*;
+
+### Changed
+- No more TravisCI (todo: migrate to Github Actions);
+
 ## [0.8.1] - 2020-07-09
 ### Changed
 - *Core*

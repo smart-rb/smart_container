@@ -1,4 +1,4 @@
-# SmartCore::Container &middot; [![Gem Version](https://badge.fury.io/rb/smart_container.svg)](https://badge.fury.io/rb/smart_container) [![Build Status](https://travis-ci.org/smart-rb/smart_container.svg?branch=master)](https://travis-ci.org/smart-rb/smart_container)
+# SmartCore::Container &middot; [![Gem Version](https://badge.fury.io/rb/smart_container.svg)](https://badge.fury.io/rb/smart_container)
 
 Thread-safe semanticaly-defined IoC/DI Container.
 
@@ -305,6 +305,8 @@ container.namespace('database') {} # no one to listen this changement... :)
 ---
 
 ## Roadmap
+
+- migrate to Github Actions;
 
 - convinient way to rebind registered dependnecies:
 
