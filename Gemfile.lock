@@ -2,7 +2,7 @@ PATH
   remote: .
   specs:
     smart_container (0.9.0)
-      smart_engine (~> 0.5)
+      smart_engine (~> 0.11)
 
 GEM
   remote: https://rubygems.org/
