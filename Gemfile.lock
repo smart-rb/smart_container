@@ -92,12 +92,12 @@ PLATFORMS
   x86_64-darwin-20
 
 DEPENDENCIES
-  armitage-rubocop
-  bundler
-  pry
-  rake
-  rspec
-  simplecov
+  armitage-rubocop (~> 1.7)
+  bundler (~> 2.2)
+  pry (~> 0.13)
+  rake (~> 13.0)
+  rspec (~> 3.10)
+  simplecov (~> 0.21)
   smart_container!
 
 BUNDLED WITH
