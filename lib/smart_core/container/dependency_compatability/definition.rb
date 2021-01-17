@@ -13,6 +13,7 @@ module SmartCore::Container::DependencyCompatability::Definition
     #
     # @api private
     # @since 0.1.0
+    # rubocop:disable Lint/EmptyBlock
     def potential_namespace_overlap?(container_klass, dependency_name)
       anonymous_container = Class.new(container_klass).new
       anonymous_container.register(dependency_name, &(proc {}))
@@ -20,6 +21,7 @@ module SmartCore::Container::DependencyCompatability::Definition
     rescue SmartCore::Container::DependencyOverNamespaceOverlapError
       true
     end
+    # rubocop:enable Lint/EmptyBlock
 
     # @param container_klass [Class<SmartCore::Container>]
     # @param namespace_name [String, Symbol]
@@ -27,6 +29,7 @@ module SmartCore::Container::DependencyCompatability::Definition
     #
     # @api private
     # @since 0.1.0
+    # rubocop:disable Lint/EmptyBlock
     def potential_dependency_overlap?(container_klass, namespace_name)
       anonymous_container = Class.new(container_klass).new
       anonymous_container.namespace(namespace_name, &(proc {}))
@@ -34,5 +37,6 @@ module SmartCore::Container::DependencyCompatability::Definition
     rescue SmartCore::Container::NamespaceOverDependencyOverlapError
       true
     end
+    # rubocop:enable Lint/EmptyBlock
   end
 end

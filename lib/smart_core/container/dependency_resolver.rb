@@ -63,7 +63,7 @@ module SmartCore::Container::DependencyResolver
       entity = extract(container, dependency_path)
 
       case
-      when memoized.nil?
+      when memoized == nil
         entity.is_a?(SmartCore::Container::Entities::Dependency)
       when !!memoized == true
         entity.is_a?(SmartCore::Container::Entities::MemoizedDependency)

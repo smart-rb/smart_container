@@ -14,3 +14,7 @@ AllCops:
     - Rakefile
     - smart_container.gemspec
     - bin/console
+
+Lint/EmptyBlock:
+  Exclude:
+    - spec/**/*.rb

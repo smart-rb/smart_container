@@ -238,6 +238,7 @@ class SmartCore::Container::Registry
   # @api private
   # @since 0.1.0
   # @version 0.8.1
+  # rubocop:disable Lint/EmptyBlock
   def add_namespace(namespace_name, host_container, dependencies_definition)
     if state_frozen?
       raise(SmartCore::Container::FrozenRegistryError, 'Can not modify frozen registry!')
@@ -246,7 +247,6 @@ class SmartCore::Container::Registry
     dependencies_definition ||= proc {}
     prevent_dependency_overlap!(namespace_name)
 
-    # rubocop:disable Layout/RescueEnsureAlignment
     namespace_entity = begin
       fetch_entity(namespace_name)
     rescue SmartCore::Container::FetchError
@@ -254,10 +254,9 @@ class SmartCore::Container::Registry
         namespace_name, host_container
       )
     end
-    # rubocop:enable Layout/RescueEnsureAlignment
-
     namespace_entity.tap { namespace_entity.append_definitions(dependencies_definition) }
   end
+  # rubocop:enable Lint/EmptyBlock
 
   # @param root_dependency_name [String, NilClass]
   # @param block [Block]

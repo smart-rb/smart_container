@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module SmartCore
-  class Container
+  class Container # rubocop:disable Style/StaticClass
     # @api public
     # @since 0.1.0
     # @version 0.9.0

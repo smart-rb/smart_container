@@ -123,7 +123,7 @@ class SmartCore::Container::DependencyWatcher
   # @api private
   # @since 0.8.0
   def remove_listeners(entity_path) # TODO: support for pattern-based pathes
-    if entity_path.nil?
+    if entity_path == nil
       observers.each_value(&:clear)
     else
       entity_path = indifferently_accessable_path(entity_path)
