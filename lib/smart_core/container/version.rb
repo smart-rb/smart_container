@@ -4,7 +4,7 @@ module SmartCore
   class Container
     # @api public
     # @since 0.1.0
-    # @version 0.8.1
-    VERSION = '0.8.1'
+    # @version 0.9.0
+    VERSION = '0.9.0'
   end
 end
