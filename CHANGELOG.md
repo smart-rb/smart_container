@@ -3,12 +3,12 @@ All notable changes to this project will be documented in this file.
 
 ## [0.9.0] - 2020-01-17
 ### Added
-- Support for *Ruby@3*;
+- Support for **Ruby@3**;
 - Updated development dependencies;
 
 ### Changed
 - No more TravisCI (todo: migrate to Github Actions);
-- Minimal `smart_engine` version: *0.11.0* (in order to support *Ruby@3*);
+- Minimal `smart_engine` version: **0.11.0** (in order to support **Ruby@3**);
 
 ## [0.8.1] - 2020-07-09
 ### Changed
