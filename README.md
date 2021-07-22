@@ -1,6 +1,14 @@
-# SmartCore::Container &middot; [![Gem Version](https://badge.fury.io/rb/smart_container.svg)](https://badge.fury.io/rb/smart_container)
+# SmartCore::Container &middot; [![Supporting](logos/cado_labs_badge.png)](logos/cado_labs_badge.png) &middot; [![Gem Version](https://badge.fury.io/rb/smart_container.png)](https://badge.fury.io/rb/smart_container)
 
 Thread-safe semanticaly-defined IoC/DI Container.
+
+---
+
+<p>
+  <a href="https://github.com/Cado-Labs">
+    <img src="logos/cado_labs_supporting.svg" alt="Supported by Cado Labs">
+  </a>
+</p>
 
 ---
 
@@ -369,6 +377,12 @@ end
 ## License
 
 Released under MIT License.
+
+## Supporting
+
+<a href="https://github.com/Cado-Labs">
+  <img src="logos/cado_labs_logo.png" alt="Supported by Cado Labs">
+</a>
 
 ## Authors
 
