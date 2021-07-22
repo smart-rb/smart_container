@@ -1,4 +1,4 @@
-# SmartCore::Container &middot; [![Supporting](https://github.com/Cado-Labs/cado-labs-logos/blob/main/cado_labs_badge.png)](https://github.com/Cado-Labs/cado-labs-logos/blob/main/cado_labs_badge.png) &middot; [![Gem Version](https://badge.fury.io/rb/smart_container.png)](https://badge.fury.io/rb/smart_container)
+# SmartCore::Container &middot; [![Supporting](https://github.com/Cado-Labs/cado-labs-logos/blob/main/cado_labs_badge.png)](https://github.com/Cado-Labs/) &middot; [![Gem Version](https://badge.fury.io/rb/smart_container.png)](https://badge.fury.io/rb/smart_container)
 
 Thread-safe semanticaly-defined IoC/DI Container.
 
