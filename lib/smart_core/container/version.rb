@@ -2,9 +2,11 @@
 
 module SmartCore
   class Container # rubocop:disable Style/StaticClass
+    # @return [String]
+    #
     # @api public
     # @since 0.1.0
-    # @version 0.9.0
-    VERSION = '0.9.0'
+    # @version 0.10.0
+    VERSION = '0.10.0'
   end
 end
