@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [0.10.0] - 2022-10-14
 ### Changed
 - Simple `Mutex`-based locks was replaced with `SmartCore::Engine::ReadWriteLock` in order to decrease
   context switching during method resolving inside RubyVM (to reduce thread locks when it is not necessary);
