@@ -238,7 +238,6 @@ class SmartCore::Container::Registry
   # @api private
   # @since 0.1.0
   # @version 0.8.1
-  # rubocop:disable Lint/EmptyBlock
   def add_namespace(namespace_name, host_container, dependencies_definition)
     if state_frozen?
       raise(SmartCore::Container::FrozenRegistryError, 'Can not modify frozen registry!')
@@ -256,7 +255,6 @@ class SmartCore::Container::Registry
     end
     namespace_entity.tap { namespace_entity.append_definitions(dependencies_definition) }
   end
-  # rubocop:enable Lint/EmptyBlock
 
   # @param root_dependency_name [String, NilClass]
   # @param block [Block]
@@ -274,8 +272,8 @@ class SmartCore::Container::Registry
         final_dependency_name =
           if root_dependency_name
             "#{root_dependency_name}" \
-            "#{SmartCore::Container::DependencyResolver::PATH_PART_SEPARATOR}" \
-            "#{dependency_name}"
+              "#{SmartCore::Container::DependencyResolver::PATH_PART_SEPARATOR}" \
+              "#{dependency_name}"
           else
             dependency_name
           end

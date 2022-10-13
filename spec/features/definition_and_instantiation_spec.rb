@@ -285,7 +285,7 @@ RSpec.describe 'Definition and instantiation' do
       expect do
         SmartCore::Container.new(
           host_container: (SmartCore::Container.define {}),
-          host_path: 12345 # should be a type of string
+          host_path: 12_345 # should be a type of string
         )
       end.to raise_error(SmartCore::Container::ArgumentError)
 

@@ -88,7 +88,7 @@ module SmartCore
       build_registry!
       @watcher = SmartCore::Container::DependencyWatcher.new(self)
       @host_path = host_path
-      @access_lock = ArbitraryLock.new
+      @access_lock = SmartCore::Engine::ReadWriteLock.new
     end
 
     # @param dependency_name [String, Symbol]
