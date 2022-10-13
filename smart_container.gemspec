@@ -29,7 +29,6 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'smart_engine', '~> 0.17'
 
-  spec.add_development_dependency 'solargraph',       '~> 0.47'
   spec.add_development_dependency 'bundler',          '~> 2.3'
   spec.add_development_dependency 'rake',             '~> 13.0'
   spec.add_development_dependency 'rspec',            '~> 3.11'
