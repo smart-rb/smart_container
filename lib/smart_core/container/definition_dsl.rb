@@ -17,7 +17,7 @@ class SmartCore::Container
       def included(base_klass)
         base_klass.instance_variable_set(:@__container_definition_commands__, CommandSet.new)
         base_klass.instance_variable_set(:@__container_instantiation_commands__, CommandSet.new)
-        base_klass.instance_variable_set(:@__container_definition_lock__, ArbitraryLock.new)
+        base_klass.instance_variable_set(:@__container_definition_lock__, SmartCore::Engine::ReadWriteLock.new)
         base_klass.singleton_class.send(:attr_reader, :__container_definition_commands__)
         base_klass.singleton_class.send(:attr_reader, :__container_instantiation_commands__)
         base_klass.extend(ClassMethods)
@@ -36,7 +36,7 @@ class SmartCore::Container
       def inherited(child_klass)
         child_klass.instance_variable_set(:@__container_definition_commands__, CommandSet.new)
         child_klass.instance_variable_set(:@__container_instantiation_commands__, CommandSet.new)
-        child_klass.instance_variable_set(:@__container_definition_lock__, ArbitraryLock.new)
+        child_klass.instance_variable_set(:@__container_definition_lock__, SmartCore::Engine::ReadWriteLock.new)
         SmartCore::Container::DefinitionDSL::Inheritance.inherit(base: self, child: child_klass)
         child_klass.singleton_class.prepend(ClassInheritance)
         super
@@ -53,7 +53,7 @@ class SmartCore::Container
       # @api public
       # @since 0.1.0
       def namespace(namespace_name, &dependencies_definition)
-        @__container_definition_lock__.thread_safe do
+        @__container_definition_lock__.write_sync do
           DependencyCompatability::Definition.prevent_dependency_overlap!(self, namespace_name)
 
           __container_definition_commands__ << Commands::Definition::Namespace.new(
@@ -75,7 +75,7 @@ class SmartCore::Container
         memoize: SmartCore::Container::Registry::DEFAULT_MEMOIZATION_BEHAVIOR,
         &dependency_definition
       )
-        @__container_definition_lock__.thread_safe do
+        @__container_definition_lock__.write_sync do
           DependencyCompatability::Definition.prevent_namespace_overlap!(self, dependency_name)
 
           __container_definition_commands__ << Commands::Definition::Register.new(
@@ -90,7 +90,7 @@ class SmartCore::Container
       # @api public
       # @since 0.1.0
       def compose(container_klass)
-        @__container_definition_lock__.thread_safe do
+        @__container_definition_lock__.write_sync do
           __container_definition_commands__ << Commands::Definition::Compose.new(
             container_klass
           )
@@ -106,7 +106,7 @@ class SmartCore::Container
       # @api public
       # @since 0.1.0
       def freeze_state!
-        @__container_definition_lock__.thread_safe do
+        @__container_definition_lock__.write_sync do
           __container_instantiation_commands__ << Commands::Instantiation::FreezeState.new
         end
       end

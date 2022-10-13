@@ -2,6 +2,7 @@
 
 # @api private
 # @since 0.1.0
+# @version 0.10.0
 class SmartCore::Container::Entities::Namespace < SmartCore::Container::Entities::Base
   # @return [String]
   #
@@ -21,13 +22,13 @@ class SmartCore::Container::Entities::Namespace < SmartCore::Container::Entities
   #
   # @api private
   # @since 0.1.0
-  # @version 0.8.1
+  # @version 0.10.0
   def initialize(namespace_name, host_container = SmartCore::Container::NO_HOST_CONTAINER)
     super(namespace_name)
     @container_klass = Class.new(SmartCore::Container)
     @container_instance = nil
     @host_container = host_container
-    @lock = SmartCore::Container::ArbitraryLock.new
+    @lock = SmartCore::Engine::ReadWriteLock.new
   end
 
   # @param runtime_host_container [SmartCore::Container, NilClass]
@@ -35,26 +36,26 @@ class SmartCore::Container::Entities::Namespace < SmartCore::Container::Entities
   #
   # @api private
   # @since 0.1.0
-  # @version 0.8.1
+  # @version 0.10.0
   def reveal(runtime_host_container = SmartCore::Container::NO_HOST_CONTAINER)
-    thread_safe { container_instance(runtime_host_container) }
+    @lock.read_sync { container_instance(runtime_host_container) }
   end
 
   # @param dependencies_definition [Proc]
   # @return [void]
   #
   # @api private
-  # @since 0.1.0
+  # @since 0.10.0
   def append_definitions(dependencies_definition)
-    thread_safe { container_klass.instance_eval(&dependencies_definition) }
+    @lock.write_sync { container_klass.instance_eval(&dependencies_definition) }
   end
 
   # @return [void]
   #
   # @api private
-  # @since 0.1.0
+  # @since 0.10.0
   def freeze!
-    thread_safe { container_instance.freeze! }
+    @lock.write_sync { container_instance.freeze! }
   end
 
   private
@@ -77,14 +78,5 @@ class SmartCore::Container::Entities::Namespace < SmartCore::Container::Entities
       host_container: @host_container,
       host_path: @host_container && namespace_name
     )
-  end
-
-  # @param block [Block]
-  # @return [Any]
-  #
-  # @api private
-  # @since 0.1.0
-  def thread_safe(&block)
-    @lock.thread_safe(&block)
   end
 end

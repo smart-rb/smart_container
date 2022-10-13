@@ -2,6 +2,7 @@
 
 # @api private
 # @since 0.1.0
+# @version 0.10.0
 # rubocop:disable Metrics/ClassLength
 class SmartCore::Container::Registry
   # @since 0.1.0
@@ -35,9 +36,10 @@ class SmartCore::Container::Registry
   #
   # @api private
   # @since 0.1.0
+  # @version 0.10.0
   def initialize
     @registry = {}
-    @access_lock = SmartCore::Container::ArbitraryLock.new
+    @lock = SmartCore::Engine::ReadWriteLock.new
   end
 
   # @param entity_path [String, Symbol]
@@ -45,8 +47,9 @@ class SmartCore::Container::Registry
   #
   # @api private
   # @since 0.1.0
+  # @version 0.10.0
   def resolve(entity_path)
-    thread_safe { fetch_entity(entity_path) }
+    @lock.read_sync { fetch_entity(entity_path) }
   end
 
   # @param name [String, Symbol]
@@ -56,9 +59,9 @@ class SmartCore::Container::Registry
   #
   # @api private
   # @since 0.1.0
-  # @version 0.3.0
+  # @version 0.10.0
   def register_dependency(name, memoize: DEFAULT_MEMOIZATION_BEHAVIOR, &dependency_definition)
-    thread_safe { add_dependency(name, dependency_definition, memoize) }
+    @lock.write_sync { add_dependency(name, dependency_definition, memoize) }
   end
 
   # @param name [String, Symbol]
@@ -68,29 +71,31 @@ class SmartCore::Container::Registry
   #
   # @api private
   # @since 0.1.0
-  # @version 0.8.1
+  # @version 0.10.0
   def register_namespace(
     name,
     host_container = SmartCore::Container::NO_HOST_CONTAINER,
     &dependencies_definition
   )
-    thread_safe { add_namespace(name, host_container, dependencies_definition) }
+    @lock.write_sync { add_namespace(name, host_container, dependencies_definition) }
   end
 
   # @return [void]
   #
   # @api private
   # @since 0.1.0
+  # @version 0.10.0
   def freeze!
-    thread_safe { freeze_state! }
+    @lock.write_sync { freeze_state! }
   end
 
   # @return [Boolean]
   #
   # @api private
   # @since 0.1.0
+  # @version 0.10.0
   def frozen?
-    thread_safe { state_frozen? }
+    @lock.read_sync { state_frozen? }
   end
 
   # @param block [Block]
@@ -98,8 +103,9 @@ class SmartCore::Container::Registry
   #
   # @api private
   # @since 0.1.0
+  # @version 0.10.0
   def each(&block)
-    thread_safe { enumerate(&block) }
+    @lock.read_sync { enumerate(&block) }
   end
 
   # @param root_dependency_name [NilClass, String]
@@ -109,12 +115,13 @@ class SmartCore::Container::Registry
   #
   # @api private
   # @since 0.4.0
+  # @version 0.10.0
   def each_dependency(
     root_dependency_name = nil,
     yield_all: DEFAULT_ITERATION_YIELD_BEHAVIOUR,
     &block
   )
-    thread_safe { iterate(root_dependency_name, yield_all: yield_all, &block) }
+    @lock.read_sync { iterate(root_dependency_name, yield_all: yield_all, &block) }
   end
 
   # @option all_variants [Boolean]
@@ -122,27 +129,23 @@ class SmartCore::Container::Registry
   #
   # @api private
   # @since 0.4.0
+  # @version 0.10.0
   def keys(all_variants: DEFAULT_KEY_EXTRACTION_BEHAVIOUR)
-    thread_safe { extract_keys(all_variants: all_variants) }
+    @lock.read_sync { extract_keys(all_variants: all_variants) }
   end
 
   # @return [Hash<String|Symbol,SmartCore::Container::Entities::Base|Any>]
   #
   # @api private
   # @since 0.1.0
+  # @version 0.10.0
   def hash_tree(resolve_dependencies: false)
-    thread_safe { build_hash_tree(resolve_dependencies: resolve_dependencies) }
+    @lock.read_sync { build_hash_tree(resolve_dependencies: resolve_dependencies) }
   end
   alias_method :to_h, :hash_tree
   alias_method :to_hash, :hash_tree
 
   private
-
-  # @return [Mutex]
-  #
-  # @api private
-  # @since 0.1.0
-  attr_reader :lock
 
   # @return [Boolean]
   #
@@ -339,15 +342,6 @@ class SmartCore::Container::Registry
     SmartCore::Container::DependencyCompatability::Registry.prevent_dependency_overlap!(
       self, namespace_name
     )
-  end
-
-  # @param block [Proc]
-  # @return [Any]
-  #
-  # @api private
-  # @since 0.1.0
-  def thread_safe(&block)
-    @access_lock.thread_safe(&block)
   end
 end
 # rubocop:enable Metrics/ClassLength

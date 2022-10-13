@@ -11,7 +11,6 @@ module SmartCore
   class Container # rubocop:disable Metrics/ClassLength
     require_relative 'container/version'
     require_relative 'container/errors'
-    require_relative 'container/arbitrary_lock'
     require_relative 'container/key_guard'
     require_relative 'container/entities'
     require_relative 'container/definition_dsl'
@@ -104,6 +103,7 @@ module SmartCore
       memoize: SmartCore::Container::Registry::DEFAULT_MEMOIZATION_BEHAVIOR,
       &dependency_definition
     )
+
       @lock.write_sync do
         registry.register_dependency(dependency_name, memoize: memoize, &dependency_definition)
         watcher.notify(dependency_name)
@@ -116,7 +116,7 @@ module SmartCore
     #
     # @api public
     # @since 0.1.0
-    # @version 0.8.0
+    # @version 0.10.0
     def namespace(namespace_name, &dependencies_definition)
       @lock.write_sync do
         registry.register_namespace(namespace_name, self, &dependencies_definition)
