@@ -2,6 +2,7 @@
 
 # @api private
 # @since 0.8.0
+# @version 0.11.0
 class SmartCore::Container::DependencyWatcher
   require_relative 'dependency_watcher/observer'
 
@@ -10,10 +11,11 @@ class SmartCore::Container::DependencyWatcher
   #
   # @api private
   # @since 0.8.0
+  # @version 0.11.0
   def initialize(container)
     @container = container
     @observers = Hash.new { |h, k| h[k] = [] }
-    @access_lock = SmartCore::Container::ArbitraryLock.new
+    @lock = SmartCore::Engine::ReadWriteLock.new
   end
 
   # @param entity_path [String, Symbol]
@@ -21,8 +23,9 @@ class SmartCore::Container::DependencyWatcher
   #
   # @api private
   # @since 0.8.0
+  # @version 0.11.0
   def notify(entity_path)
-    thread_safe { notify_listeners(entity_path) }
+    @lock.read_sync { notify_listeners(entity_path) }
   end
 
   # @param entity_path [String, Symbol]
@@ -31,8 +34,9 @@ class SmartCore::Container::DependencyWatcher
   #
   # @api private
   # @since 0.8.0
+  # @version 0.11.0
   def watch(entity_path, &observer) # TODO: support for pattern-based pathes
-    thread_safe { listen(entity_path, observer) }
+    @lock.write_sync { listen(entity_path, observer) }
   end
 
   # @param observer [SmartCore::Container::DependencyWatcher::Observer]
@@ -40,8 +44,9 @@ class SmartCore::Container::DependencyWatcher
   #
   # @api private
   # @since 0.8.0
+  # @version 0.11.0
   def unwatch(observer)
-    thread_safe { remove_listener(observer) }
+    @lock.write_sync { remove_listener(observer) }
   end
 
   # @param entity_path [String, Symbol, NilClass]
@@ -49,8 +54,9 @@ class SmartCore::Container::DependencyWatcher
   #
   # @api private
   # @since 0.8.0
+  # @version 0.11.0
   def clear_listeners(entity_path = nil) # TODO: support for pattern-based pathes
-    thread_safe { remove_listeners(entity_path) }
+    @lock.write_sync { remove_listeners(entity_path) }
   end
 
   private
@@ -138,14 +144,5 @@ class SmartCore::Container::DependencyWatcher
   # @since 0.8.0
   def indifferently_accessable_path(entity_path)
     SmartCore::Container::KeyGuard.indifferently_accessable_key(entity_path)
-  end
-
-  # @param block [Block]
-  # @return [Any]
-  #
-  # @api private
-  # @since 0.8.0
-  def thread_safe(&block)
-    @access_lock.thread_safe(&block)
   end
 end

@@ -18,7 +18,7 @@ class SmartCore::Container::DefinitionDSL::CommandSet
   # @since 0.1.0
   def initialize
     @commands = []
-    @access_lock = SmartCore::Container::ArbitraryLock.new
+    @lock = SmartCore::Engine::ReadWriteLock.new
   end
 
   # @param [SmartCore::Container::DefinitionDSL::Commands::Base]
@@ -27,7 +27,7 @@ class SmartCore::Container::DefinitionDSL::CommandSet
   # @api private
   # @since 0.1.0
   def add_command(command)
-    thread_safe { commands << command }
+    @lock.write_sync { commands << command }
   end
   alias_method :<<, :add_command
 
@@ -37,7 +37,7 @@ class SmartCore::Container::DefinitionDSL::CommandSet
   # @api private
   # @since 0.1.0
   def each(&block)
-    thread_safe { block_given? ? commands.each(&block) : commands.each }
+    @lock.read_sync { block_given? ? commands.each(&block) : commands.each }
   end
 
   # @param command_set [SmartCore::Container::DefinitionDSL::CommandSet]
@@ -49,7 +49,7 @@ class SmartCore::Container::DefinitionDSL::CommandSet
   # @api private
   # @since 0.1.0
   def concat(command_set, &concat_condition)
-    thread_safe do
+    @lock.read_sync do
       if block_given?
         command_set.dup.each { |command| (commands << command) if yield(command) }
       else
@@ -65,7 +65,7 @@ class SmartCore::Container::DefinitionDSL::CommandSet
   # @api private
   # @since 0.1.0
   def dup
-    thread_safe do
+    @lock.read_sync do
       self.class.new.tap do |duplicate|
         commands.each do |command|
           duplicate.add_command(command.dup)
@@ -82,6 +82,6 @@ class SmartCore::Container::DefinitionDSL::CommandSet
   # @api private
   # @since 0.1.0
   def thread_safe(&block)
-    @access_lock.thread_safe(&block)
+    @lock.thread_safe(&block)
   end
 end
