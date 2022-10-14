@@ -2,6 +2,7 @@
 
 # @api private
 # @since 0.1.0
+# @version 0.11.0
 class SmartCore::Container::DefinitionDSL::CommandSet
   # @since 0.1.0
   include Enumerable
@@ -16,6 +17,7 @@ class SmartCore::Container::DefinitionDSL::CommandSet
   #
   # @api private
   # @since 0.1.0
+  # @version 0.11.0
   def initialize
     @commands = []
     @lock = SmartCore::Engine::ReadWriteLock.new
@@ -26,6 +28,7 @@ class SmartCore::Container::DefinitionDSL::CommandSet
   #
   # @api private
   # @since 0.1.0
+  # @version 0.11.0
   def add_command(command)
     @lock.write_sync { commands << command }
   end
@@ -36,6 +39,7 @@ class SmartCore::Container::DefinitionDSL::CommandSet
   #
   # @api private
   # @since 0.1.0
+  # @version 0.11.0
   def each(&block)
     @lock.read_sync { block_given? ? commands.each(&block) : commands.each }
   end
@@ -48,6 +52,7 @@ class SmartCore::Container::DefinitionDSL::CommandSet
   #
   # @api private
   # @since 0.1.0
+  # @version 0.11.0
   def concat(command_set, &concat_condition)
     @lock.read_sync do
       if block_given?
@@ -64,6 +69,7 @@ class SmartCore::Container::DefinitionDSL::CommandSet
   #
   # @api private
   # @since 0.1.0
+  # @version 0.11.0
   def dup
     @lock.read_sync do
       self.class.new.tap do |duplicate|
